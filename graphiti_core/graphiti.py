@@ -22,6 +22,7 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing_extensions import LiteralString
 
+<<<<<<< HEAD
 from graphiti.graphiti_core.cross_encoder.client import CrossEncoderClient
 from graphiti.graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
 from graphiti.graphiti_core.driver.driver import GraphDriver
@@ -30,6 +31,16 @@ from graphiti.graphiti_core.edges import EntityEdge, EpisodicEdge
 from graphiti.graphiti_core.embedder import EmbedderClient, OpenAIEmbedder
 from graphiti.graphiti_core.graphiti_types import GraphitiClients
 from graphiti.graphiti_core.helpers import (
+=======
+from graphiti_core.cross_encoder.client import CrossEncoderClient
+from graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
+from graphiti_core.driver.driver import GraphDriver
+from graphiti_core.driver.neo4j_driver import Neo4jDriver
+from graphiti_core.edges import EntityEdge, EpisodicEdge
+from graphiti_core.embedder import EmbedderClient, OpenAIEmbedder
+from graphiti_core.graphiti_types import GraphitiClients
+from graphiti_core.helpers import (
+>>>>>>> main
     get_default_group_id,
     semaphore_gather,
     validate_excluded_entity_types,

@@ -340,7 +340,7 @@ async def node_fulltext_search(
     limit=RELEVANT_SCHEMA_LIMIT,
 ) -> list[EntityNode]:
     # BM25 search to get top nodes
-    fuzzy_query = fulltext_query(query, group_ids)
+    fuzzy_query = fulltext_query(query, group_ids, driver.fulltext_syntax)
     if fuzzy_query == '':
         return []
     filter_query, filter_params = node_search_filter_query_constructor(search_filter)
