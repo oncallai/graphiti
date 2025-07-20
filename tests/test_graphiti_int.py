@@ -22,13 +22,13 @@ from datetime import datetime, timezone
 import pytest
 from dotenv import load_dotenv
 
-from graphiti.graphiti_core.edges import EntityEdge, EpisodicEdge
-from graphiti.graphiti_core.graphiti import Graphiti
-from graphiti.graphiti_core.helpers import semaphore_gather
-from graphiti.graphiti_core.nodes import EntityNode, EpisodicNode
-from graphiti.graphiti_core.search.search_filters import ComparisonOperator, DateFilter, SearchFilters
-from graphiti.graphiti_core.search.search_helpers import search_results_to_context_string
-from graphiti.graphiti_core.utils.datetime_utils import utc_now
+from graphiti_core.edges import EntityEdge, EpisodicEdge
+from graphiti_core.graphiti import Graphiti
+from graphiti_core.helpers import semaphore_gather
+from graphiti_core.nodes import EntityNode, EpisodicNode
+from graphiti_core.search.search_filters import ComparisonOperator, DateFilter, SearchFilters
+from graphiti_core.search.search_helpers import search_results_to_context_string
+from graphiti_core.utils.datetime_utils import utc_now
 
 pytestmark = pytest.mark.integration
 

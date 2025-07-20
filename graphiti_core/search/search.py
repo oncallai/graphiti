@@ -18,14 +18,14 @@ import logging
 from collections import defaultdict
 from time import time
 
-from graphiti.graphiti_core.cross_encoder.client import CrossEncoderClient
-from graphiti.graphiti_core.driver.driver import GraphDriver
-from graphiti.graphiti_core.edges import EntityEdge
-from graphiti.graphiti_core.errors import SearchRerankerError
-from graphiti.graphiti_core.graphiti_types import GraphitiClients
-from graphiti.graphiti_core.helpers import semaphore_gather
-from graphiti.graphiti_core.nodes import CommunityNode, EntityNode, EpisodicNode
-from graphiti.graphiti_core.search.search_config import (
+from graphiti_core.cross_encoder.client import CrossEncoderClient
+from graphiti_core.driver.driver import GraphDriver
+from graphiti_core.edges import EntityEdge
+from graphiti_core.errors import SearchRerankerError
+from graphiti_core.graphiti_types import GraphitiClients
+from graphiti_core.helpers import semaphore_gather
+from graphiti_core.nodes import CommunityNode, EntityNode, EpisodicNode
+from graphiti_core.search.search_config import (
     DEFAULT_SEARCH_LIMIT,
     CommunityReranker,
     CommunitySearchConfig,
@@ -40,8 +40,8 @@ from graphiti.graphiti_core.search.search_config import (
     SearchConfig,
     SearchResults,
 )
-from graphiti.graphiti_core.search.search_filters import SearchFilters
-from graphiti.graphiti_core.search.search_utils import (
+from graphiti_core.search.search_filters import SearchFilters
+from graphiti_core.search.search_utils import (
     community_fulltext_search,
     community_similarity_search,
     edge_bfs_search,

@@ -21,8 +21,8 @@ import os
 import pytest
 from pydantic import BaseModel, Field
 
-from graphiti.graphiti_core.llm_client.anthropic_client import AnthropicClient
-from graphiti.graphiti_core.prompts.models import Message
+from graphiti_core.llm_client.anthropic_client import AnthropicClient
+from graphiti_core.prompts.models import Message
 
 # Skip all tests if no API key is available
 pytestmark = pytest.mark.skipif(

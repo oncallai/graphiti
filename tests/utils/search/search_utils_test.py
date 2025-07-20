@@ -2,9 +2,9 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from graphiti.graphiti_core.nodes import EntityNode
-from graphiti.graphiti_core.search.search_filters import SearchFilters
-from graphiti.graphiti_core.search.search_utils import hybrid_node_search
+from graphiti_core.nodes import EntityNode
+from graphiti_core.search.search_filters import SearchFilters
+from graphiti_core.search.search_utils import hybrid_node_search
 
 
 @pytest.mark.asyncio

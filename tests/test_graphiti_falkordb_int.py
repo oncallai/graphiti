@@ -23,14 +23,14 @@ from datetime import datetime, timezone
 import pytest
 from dotenv import load_dotenv
 
-from graphiti.graphiti_core.edges import EntityEdge, EpisodicEdge
-from graphiti.graphiti_core.graphiti import Graphiti
-from graphiti.graphiti_core.helpers import semaphore_gather
-from graphiti.graphiti_core.nodes import EntityNode, EpisodicNode
-from graphiti.graphiti_core.search.search_helpers import search_results_to_context_string
+from graphiti_core.edges import EntityEdge, EpisodicEdge
+from graphiti_core.graphiti import Graphiti
+from graphiti_core.helpers import semaphore_gather
+from graphiti_core.nodes import EntityNode, EpisodicNode
+from graphiti_core.search.search_helpers import search_results_to_context_string
 
 try:
-    from graphiti.graphiti_core.driver.falkordb_driver import FalkorDriver
+    from graphiti_core.driver.falkordb_driver import FalkorDriver
 
     HAS_FALKORDB = True
 except ImportError:

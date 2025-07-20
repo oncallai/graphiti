@@ -23,10 +23,10 @@ from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 
 from examples.wizard_of_oz.parser import get_wizard_of_oz_messages
-from graphiti.graphiti_core import Graphiti
-from graphiti.graphiti_core.llm_client.anthropic_client import AnthropicClient
-from graphiti.graphiti_core.llm_client.config import LLMConfig
-from graphiti.graphiti_core.utils.maintenance.graph_data_operations import clear_data
+from graphiti_core import Graphiti
+from graphiti_core.llm_client.anthropic_client import AnthropicClient
+from graphiti_core.llm_client.config import LLMConfig
+from graphiti_core.utils.maintenance.graph_data_operations import clear_data
 
 load_dotenv()
 

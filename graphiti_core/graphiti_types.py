@@ -16,10 +16,10 @@ limitations under the License.
 
 from pydantic import BaseModel, ConfigDict
 
-from graphiti.graphiti_core.cross_encoder import CrossEncoderClient
-from graphiti.graphiti_core.driver.driver import GraphDriver
-from graphiti.graphiti_core.embedder import EmbedderClient
-from graphiti.graphiti_core.llm_client import LLMClient
+from graphiti_core.cross_encoder import CrossEncoderClient
+from graphiti_core.driver.driver import GraphDriver
+from graphiti_core.embedder import EmbedderClient
+from graphiti_core.llm_client import LLMClient
 
 
 class GraphitiClients(BaseModel):

@@ -16,7 +16,7 @@ limitations under the License.
 
 import pytest
 
-from graphiti.graphiti_core.helpers import lucene_sanitize
+from graphiti_core.helpers import lucene_sanitize
 
 
 def test_lucene_sanitize():

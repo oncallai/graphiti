@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import logging
 from typing import Any, Protocol, TypedDict
 
 from .dedupe_edges import Prompt as DedupeEdgesPrompt
@@ -42,6 +43,7 @@ from .prompt_helpers import DO_NOT_ESCAPE_UNICODE
 from .summarize_nodes import Prompt as SummarizeNodesPrompt
 from .summarize_nodes import Versions as SummarizeNodesVersions
 from .summarize_nodes import versions as summarize_nodes_versions
+from .prompt_factory import get_extract_node_prompts, get_extract_edge_prompts
 
 
 class PromptLibrary(Protocol):
@@ -83,10 +85,66 @@ class PromptTypeWrapper:
             setattr(self, version, VersionWrapper(func))
 
 
+class DynamicPromptTypeWrapper:
+    """
+    A wrapper that dynamically selects prompts based on context.
+    Maintains the same interface as PromptTypeWrapper.
+    """
+    def __init__(self, prompt_type: str, default_versions: dict[str, PromptFunction]):
+        self.prompt_type = prompt_type
+        self.default_versions = default_versions
+        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
+    
+    def __getattr__(self, version: str):
+        def dynamic_wrapper(context: dict[str, Any]) -> list[Message]:
+            source_description = context.get('source_description', 'default')
+            
+            # Dynamic selection for extract_nodes
+            if self.prompt_type == 'extract_nodes' and 'source_description' in context:
+                versions = get_extract_node_prompts(context)
+                func = versions.get(version)
+                if func is None:
+                    func = self.default_versions.get(version)
+                    if func is None:
+                        raise AttributeError(f"Version '{version}' not found")
+                    self.logger.info(f"Using default {self.prompt_type} prompt '{version}' for source_description: '{source_description}'")
+                else:
+                    self.logger.info(f"Using dynamic {self.prompt_type} prompt '{version}' for source_description: '{source_description}'")
+            # Dynamic selection for extract_edges
+            elif self.prompt_type == 'extract_edges' and 'source_description' in context:
+                versions = get_extract_edge_prompts(context)
+                func = versions.get(version)
+                if func is None:
+                    func = self.default_versions.get(version)
+                    if func is None:
+                        raise AttributeError(f"Version '{version}' not found")
+                    self.logger.info(f"Using default {self.prompt_type} prompt '{version}' for source_description: '{source_description}'")
+                else:
+                    self.logger.info(f"Using dynamic {self.prompt_type} prompt '{version}' for source_description: '{source_description}'")
+            else:
+                func = self.default_versions.get(version)
+                if func is None:
+                    raise AttributeError(f"Version '{version}' not found")
+                self.logger.info(f"Using default {self.prompt_type} prompt '{version}' (no source_description in context)")
+            
+            # Apply the same wrapper logic as before
+            messages = func(context)
+            for message in messages:
+                message.content += DO_NOT_ESCAPE_UNICODE if message.role == 'system' else ''
+            return messages
+        
+        return dynamic_wrapper
+
+
 class PromptLibraryWrapper:
     def __init__(self, library: PromptLibraryImpl):
         for prompt_type, versions in library.items():
-            setattr(self, prompt_type, PromptTypeWrapper(versions))  # type: ignore[arg-type]
+            if prompt_type in ['extract_nodes', 'extract_edges']:
+                # Use dynamic wrapper for both extract_nodes and extract_edges
+                setattr(self, prompt_type, DynamicPromptTypeWrapper(prompt_type, versions))  # type: ignore[arg-type]
+            else:
+                # Use original wrapper for others
+                setattr(self, prompt_type, PromptTypeWrapper(versions))  # type: ignore[arg-type]
 
 
 PROMPT_LIBRARY_IMPL: PromptLibraryImpl = {

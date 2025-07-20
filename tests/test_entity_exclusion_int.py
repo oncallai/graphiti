@@ -21,8 +21,8 @@ import pytest
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
-from graphiti.graphiti_core.graphiti import Graphiti
-from graphiti.graphiti_core.helpers import validate_excluded_entity_types
+from graphiti_core.graphiti import Graphiti
+from graphiti_core.helpers import validate_excluded_entity_types
 
 pytestmark = pytest.mark.integration
 

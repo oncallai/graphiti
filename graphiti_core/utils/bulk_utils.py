@@ -22,31 +22,31 @@ import numpy as np
 from pydantic import BaseModel, Field
 from typing_extensions import Any
 
-from graphiti.graphiti_core.driver.driver import GraphDriver, GraphDriverSession
-from graphiti.graphiti_core.edges import Edge, EntityEdge, EpisodicEdge, create_entity_edge_embeddings
-from graphiti.graphiti_core.embedder import EmbedderClient
-from graphiti.graphiti_core.graph_queries import (
+from graphiti_core.driver.driver import GraphDriver, GraphDriverSession
+from graphiti_core.edges import Edge, EntityEdge, EpisodicEdge, create_entity_edge_embeddings
+from graphiti_core.embedder import EmbedderClient
+from graphiti_core.graph_queries import (
     get_entity_edge_save_bulk_query,
     get_entity_node_save_bulk_query,
 )
-from graphiti.graphiti_core.graphiti_types import GraphitiClients
-from graphiti.graphiti_core.helpers import normalize_l2, semaphore_gather
-from graphiti.graphiti_core.models.edges.edge_db_queries import (
+from graphiti_core.graphiti_types import GraphitiClients
+from graphiti_core.helpers import normalize_l2, semaphore_gather
+from graphiti_core.models.edges.edge_db_queries import (
     EPISODIC_EDGE_SAVE_BULK,
 )
-from graphiti.graphiti_core.models.nodes.node_db_queries import (
+from graphiti_core.models.nodes.node_db_queries import (
     EPISODIC_NODE_SAVE_BULK,
 )
-from graphiti.graphiti_core.nodes import EntityNode, EpisodeType, EpisodicNode, create_entity_node_embeddings
-from graphiti.graphiti_core.utils.maintenance.edge_operations import (
+from graphiti_core.nodes import EntityNode, EpisodeType, EpisodicNode, create_entity_node_embeddings
+from graphiti_core.utils.maintenance.edge_operations import (
     extract_edges,
     resolve_extracted_edge,
 )
-from graphiti.graphiti_core.utils.maintenance.graph_data_operations import (
+from graphiti_core.utils.maintenance.graph_data_operations import (
     EPISODE_WINDOW_LEN,
     retrieve_episodes,
 )
-from graphiti.graphiti_core.utils.maintenance.node_operations import (
+from graphiti_core.utils.maintenance.node_operations import (
     extract_nodes,
     resolve_extracted_nodes,
 )

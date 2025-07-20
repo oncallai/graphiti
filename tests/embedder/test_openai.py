@@ -20,7 +20,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from graphiti.graphiti_core.embedder.openai import (
+from graphiti_core.embedder.openai import (
     DEFAULT_EMBEDDING_MODEL,
     OpenAIEmbedder,
     OpenAIEmbedderConfig,

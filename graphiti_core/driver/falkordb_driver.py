@@ -32,7 +32,7 @@ else:
             'Install it with: pip install graphiti-core[falkordb]'
         ) from None
 
-from graphiti.graphiti_core.driver.driver import GraphDriver, GraphDriverSession
+from graphiti_core.driver.driver import GraphDriver, GraphDriverSession
 
 logger = logging.getLogger(__name__)
 

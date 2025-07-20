@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from graphiti.graphiti_core.llm_client.client import LLMClient
-from graphiti.graphiti_core.llm_client.config import LLMConfig
+from graphiti_core.llm_client.client import LLMClient
+from graphiti_core.llm_client.config import LLMConfig
 
 
 class MockLLMClient(LLMClient):

@@ -18,14 +18,14 @@ import logging
 from datetime import datetime
 from time import time
 
-from graphiti.graphiti_core.edges import EntityEdge
-from graphiti.graphiti_core.llm_client import LLMClient
-from graphiti.graphiti_core.llm_client.config import ModelSize
-from graphiti.graphiti_core.nodes import EpisodicNode
-from graphiti.graphiti_core.prompts import prompt_library
-from graphiti.graphiti_core.prompts.extract_edge_dates import EdgeDates
-from graphiti.graphiti_core.prompts.invalidate_edges import InvalidatedEdges
-from graphiti.graphiti_core.utils.datetime_utils import ensure_utc
+from graphiti_core.edges import EntityEdge
+from graphiti_core.llm_client import LLMClient
+from graphiti_core.llm_client.config import ModelSize
+from graphiti_core.nodes import EpisodicNode
+from graphiti_core.prompts import prompt_library
+from graphiti_core.prompts.extract_edge_dates import EdgeDates
+from graphiti_core.prompts.invalidate_edges import InvalidatedEdges
+from graphiti_core.utils.datetime_utils import ensure_utc
 
 logger = logging.getLogger(__name__)
 

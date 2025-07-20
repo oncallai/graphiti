@@ -21,7 +21,7 @@ from uuid import uuid4
 
 import pytest
 
-from graphiti.graphiti_core.nodes import (
+from graphiti_core.nodes import (
     CommunityNode,
     EntityNode,
     EpisodeType,
@@ -34,7 +34,7 @@ FALKORDB_USER = os.getenv('FALKORDB_USER', None)
 FALKORDB_PASSWORD = os.getenv('FALKORDB_PASSWORD', None)
 
 try:
-    from graphiti.graphiti_core.driver.falkordb_driver import FalkorDriver
+    from graphiti_core.driver.falkordb_driver import FalkorDriver
 
     HAS_FALKORDB = True
 except ImportError:

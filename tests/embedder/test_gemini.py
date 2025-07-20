@@ -23,7 +23,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from embedder_fixtures import create_embedding_values
 
-from graphiti.graphiti_core.embedder.gemini import (
+from graphiti_core.embedder.gemini import (
     DEFAULT_EMBEDDING_MODEL,
     GeminiEmbedder,
     GeminiEmbedderConfig,

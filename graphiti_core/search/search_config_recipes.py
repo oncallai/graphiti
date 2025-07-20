@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from graphiti.graphiti_core.search.search_config import (
+from graphiti_core.search.search_config import (
     CommunityReranker,
     CommunitySearchConfig,
     CommunitySearchMethod,

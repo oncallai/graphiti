@@ -21,24 +21,24 @@ from time import time
 from pydantic import BaseModel
 from typing_extensions import LiteralString
 
-from graphiti.graphiti_core.driver.driver import GraphDriver
-from graphiti.graphiti_core.edges import (
+from graphiti_core.driver.driver import GraphDriver
+from graphiti_core.edges import (
     CommunityEdge,
     EntityEdge,
     EpisodicEdge,
     create_entity_edge_embeddings,
 )
-from graphiti.graphiti_core.graphiti_types import GraphitiClients
-from graphiti.graphiti_core.helpers import MAX_REFLEXION_ITERATIONS, semaphore_gather
-from graphiti.graphiti_core.llm_client import LLMClient
-from graphiti.graphiti_core.llm_client.config import ModelSize
-from graphiti.graphiti_core.nodes import CommunityNode, EntityNode, EpisodicNode
-from graphiti.graphiti_core.prompts import prompt_library
-from graphiti.graphiti_core.prompts.dedupe_edges import EdgeDuplicate, UniqueFacts
-from graphiti.graphiti_core.prompts.extract_edges import ExtractedEdges, MissingFacts
-from graphiti.graphiti_core.search.search_filters import SearchFilters
-from graphiti.graphiti_core.search.search_utils import get_edge_invalidation_candidates, get_relevant_edges
-from graphiti.graphiti_core.utils.datetime_utils import ensure_utc, utc_now
+from graphiti_core.graphiti_types import GraphitiClients
+from graphiti_core.helpers import MAX_REFLEXION_ITERATIONS, semaphore_gather
+from graphiti_core.llm_client import LLMClient
+from graphiti_core.llm_client.config import ModelSize
+from graphiti_core.nodes import CommunityNode, EntityNode, EpisodicNode
+from graphiti_core.prompts import prompt_library
+from graphiti_core.prompts.dedupe_edges import EdgeDuplicate, UniqueFacts
+from graphiti_core.prompts.extract_edges import ExtractedEdges, MissingFacts
+from graphiti_core.search.search_filters import SearchFilters
+from graphiti_core.search.search_utils import get_edge_invalidation_candidates, get_relevant_edges
+from graphiti_core.utils.datetime_utils import ensure_utc, utc_now
 
 logger = logging.getLogger(__name__)
 
@@ -151,6 +151,7 @@ async def extract_edges(
         'reference_time': episode.valid_at,
         'edge_types': edge_types_context,
         'custom_prompt': '',
+        'source_description': episode.source_description,
     }
 
     facts_missed = True

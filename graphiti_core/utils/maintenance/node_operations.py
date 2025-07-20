@@ -23,24 +23,24 @@ from uuid import uuid4
 import pydantic
 from pydantic import BaseModel, Field
 
-from graphiti.graphiti_core.graphiti_types import GraphitiClients
-from graphiti.graphiti_core.helpers import MAX_REFLEXION_ITERATIONS, semaphore_gather
-from graphiti.graphiti_core.llm_client import LLMClient
-from graphiti.graphiti_core.llm_client.config import ModelSize
-from graphiti.graphiti_core.nodes import EntityNode, EpisodeType, EpisodicNode, create_entity_node_embeddings
-from graphiti.graphiti_core.prompts import prompt_library
-from graphiti.graphiti_core.prompts.dedupe_nodes import NodeResolutions
-from graphiti.graphiti_core.prompts.extract_nodes import (
+from graphiti_core.graphiti_types import GraphitiClients
+from graphiti_core.helpers import MAX_REFLEXION_ITERATIONS, semaphore_gather
+from graphiti_core.llm_client import LLMClient
+from graphiti_core.llm_client.config import ModelSize
+from graphiti_core.nodes import EntityNode, EpisodeType, EpisodicNode, create_entity_node_embeddings
+from graphiti_core.prompts import prompt_library
+from graphiti_core.prompts.dedupe_nodes import NodeResolutions
+from graphiti_core.prompts.extract_nodes import (
     ExtractedEntities,
     ExtractedEntity,
     MissedEntities,
 )
-from graphiti.graphiti_core.search.search import search
-from graphiti.graphiti_core.search.search_config import SearchResults
-from graphiti.graphiti_core.search.search_config_recipes import NODE_HYBRID_SEARCH_RRF
-from graphiti.graphiti_core.search.search_filters import SearchFilters
-from graphiti.graphiti_core.utils.datetime_utils import utc_now
-from graphiti.graphiti_core.utils.maintenance.edge_operations import filter_existing_duplicate_of_edges
+from graphiti_core.search.search import search
+from graphiti_core.search.search_config import SearchResults
+from graphiti_core.search.search_config_recipes import NODE_HYBRID_SEARCH_RRF
+from graphiti_core.search.search_filters import SearchFilters
+from graphiti_core.utils.datetime_utils import utc_now
+from graphiti_core.utils.maintenance.edge_operations import filter_existing_duplicate_of_edges
 
 logger = logging.getLogger(__name__)
 

@@ -4,16 +4,16 @@ from collections import defaultdict
 
 from pydantic import BaseModel
 
-from graphiti.graphiti_core.driver.driver import GraphDriver
-from graphiti.graphiti_core.edges import CommunityEdge
-from graphiti.graphiti_core.embedder import EmbedderClient
-from graphiti.graphiti_core.helpers import semaphore_gather
-from graphiti.graphiti_core.llm_client import LLMClient
-from graphiti.graphiti_core.nodes import CommunityNode, EntityNode, get_community_node_from_record
-from graphiti.graphiti_core.prompts import prompt_library
-from graphiti.graphiti_core.prompts.summarize_nodes import Summary, SummaryDescription
-from graphiti.graphiti_core.utils.datetime_utils import utc_now
-from graphiti.graphiti_core.utils.maintenance.edge_operations import build_community_edges
+from graphiti_core.driver.driver import GraphDriver
+from graphiti_core.edges import CommunityEdge
+from graphiti_core.embedder import EmbedderClient
+from graphiti_core.helpers import semaphore_gather
+from graphiti_core.llm_client import LLMClient
+from graphiti_core.nodes import CommunityNode, EntityNode, get_community_node_from_record
+from graphiti_core.prompts import prompt_library
+from graphiti_core.prompts.summarize_nodes import Summary, SummaryDescription
+from graphiti_core.utils.datetime_utils import utc_now
+from graphiti_core.utils.maintenance.edge_operations import build_community_edges
 
 MAX_COMMUNITY_BUILD_CONCURRENCY = 10
 
