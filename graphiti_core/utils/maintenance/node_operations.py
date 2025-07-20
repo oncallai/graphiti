@@ -23,24 +23,24 @@ from uuid import uuid4
 import pydantic
 from pydantic import BaseModel, Field
 
-from graphiti_core.graphiti_types import GraphitiClients
-from graphiti_core.helpers import MAX_REFLEXION_ITERATIONS, semaphore_gather
-from graphiti_core.llm_client import LLMClient
-from graphiti_core.llm_client.config import ModelSize
-from graphiti_core.nodes import EntityNode, EpisodeType, EpisodicNode, create_entity_node_embeddings
-from graphiti_core.prompts import prompt_library
-from graphiti_core.prompts.dedupe_nodes import NodeResolutions
-from graphiti_core.prompts.extract_nodes import (
+from graphiti.graphiti_core.graphiti_types import GraphitiClients
+from graphiti.graphiti_core.helpers import MAX_REFLEXION_ITERATIONS, semaphore_gather
+from graphiti.graphiti_core.llm_client import LLMClient
+from graphiti.graphiti_core.llm_client.config import ModelSize
+from graphiti.graphiti_core.nodes import EntityNode, EpisodeType, EpisodicNode, create_entity_node_embeddings
+from graphiti.graphiti_core.prompts import prompt_library
+from graphiti.graphiti_core.prompts.dedupe_nodes import NodeResolutions
+from graphiti.graphiti_core.prompts.extract_nodes import (
     ExtractedEntities,
     ExtractedEntity,
     MissedEntities,
 )
-from graphiti_core.search.search import search
-from graphiti_core.search.search_config import SearchResults
-from graphiti_core.search.search_config_recipes import NODE_HYBRID_SEARCH_RRF
-from graphiti_core.search.search_filters import SearchFilters
-from graphiti_core.utils.datetime_utils import utc_now
-from graphiti_core.utils.maintenance.edge_operations import filter_existing_duplicate_of_edges
+from graphiti.graphiti_core.search.search import search
+from graphiti.graphiti_core.search.search_config import SearchResults
+from graphiti.graphiti_core.search.search_config_recipes import NODE_HYBRID_SEARCH_RRF
+from graphiti.graphiti_core.search.search_filters import SearchFilters
+from graphiti.graphiti_core.utils.datetime_utils import utc_now
+from graphiti.graphiti_core.utils.maintenance.edge_operations import filter_existing_duplicate_of_edges
 
 logger = logging.getLogger(__name__)
 
@@ -277,10 +277,12 @@ async def resolve_extracted_nodes(
         uuid_map[extracted_node.uuid] = resolved_node.uuid
 
         duplicates: list[int] = resolution.get('duplicates', [])
+        if duplicate_idx not in duplicates and duplicate_idx > -1:
+            duplicates.append(duplicate_idx)
         for idx in duplicates:
             existing_node = existing_nodes[idx] if idx < len(existing_nodes) else resolved_node
 
-            node_duplicates.append((resolved_node, existing_node))
+            node_duplicates.append((extracted_node, existing_node))
 
     logger.debug(f'Resolved nodes: {[(n.name, n.uuid) for n in resolved_nodes]}')
 

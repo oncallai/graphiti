@@ -23,20 +23,20 @@ import numpy as np
 from numpy._typing import NDArray
 from typing_extensions import LiteralString
 
-from graphiti_core.driver.driver import GraphDriver
-from graphiti_core.edges import EntityEdge, get_entity_edge_from_record
-from graphiti_core.graph_queries import (
+from graphiti.graphiti_core.driver.driver import GraphDriver
+from graphiti.graphiti_core.edges import EntityEdge, get_entity_edge_from_record
+from graphiti.graphiti_core.graph_queries import (
     get_nodes_query,
     get_relationships_query,
     get_vector_cosine_func_query,
 )
-from graphiti_core.helpers import (
+from graphiti.graphiti_core.helpers import (
     RUNTIME_QUERY,
     lucene_sanitize,
     normalize_l2,
     semaphore_gather,
 )
-from graphiti_core.nodes import (
+from graphiti.graphiti_core.nodes import (
     ENTITY_NODE_RETURN,
     CommunityNode,
     EntityNode,
@@ -45,7 +45,7 @@ from graphiti_core.nodes import (
     get_entity_node_from_record,
     get_episodic_node_from_record,
 )
-from graphiti_core.search.search_filters import (
+from graphiti.graphiti_core.search.search_filters import (
     SearchFilters,
     edge_search_filter_query_constructor,
     node_search_filter_query_constructor,
@@ -60,9 +60,9 @@ MAX_SEARCH_DEPTH = 3
 MAX_QUERY_LENGTH = 32
 
 
-def fulltext_query(query: str, group_ids: list[str] | None = None):
+def fulltext_query(query: str, group_ids: list[str] | None = None, fulltext_syntax: str = ''):
     group_ids_filter_list = (
-        [f'group_id:"{lucene_sanitize(g)}"' for g in group_ids] if group_ids is not None else []
+        [fulltext_syntax + f"group_id:'{lucene_sanitize(g)}'" for g in group_ids] if group_ids is not None else []
     )
     group_ids_filter = ''
     for f in group_ids_filter_list:
@@ -157,7 +157,7 @@ async def edge_fulltext_search(
     limit=RELEVANT_SCHEMA_LIMIT,
 ) -> list[EntityEdge]:
     # fulltext search over facts
-    fuzzy_query = fulltext_query(query, group_ids)
+    fuzzy_query = fulltext_query(query, group_ids, driver.fulltext_syntax)
     if fuzzy_query == '':
         return []
 
@@ -344,6 +344,12 @@ async def node_fulltext_search(
     if fuzzy_query == '':
         return []
     filter_query, filter_params = node_search_filter_query_constructor(search_filter)
+    
+    # Add explicit group_id filtering to ensure strict filtering
+    group_filter_query = ''
+    if group_ids is not None:
+        group_filter_query = ' AND n.group_id IN $group_ids'
+        filter_params['group_ids'] = group_ids
 
     query = (
         get_nodes_query(driver.provider, 'node_name_and_summary', '$query')
@@ -353,6 +359,7 @@ async def node_fulltext_search(
             LIMIT $limit
             WHERE n:Entity
         """
+        + group_filter_query
         + filter_query
         + ENTITY_NODE_RETURN
         + """
@@ -472,7 +479,7 @@ async def episode_fulltext_search(
     limit=RELEVANT_SCHEMA_LIMIT,
 ) -> list[EpisodicNode]:
     # BM25 search to get top episodes
-    fuzzy_query = fulltext_query(query, group_ids)
+    fuzzy_query = fulltext_query(query, group_ids, driver.fulltext_syntax)
     if fuzzy_query == '':
         return []
 
@@ -516,7 +523,7 @@ async def community_fulltext_search(
     limit=RELEVANT_SCHEMA_LIMIT,
 ) -> list[CommunityNode]:
     # BM25 search to get top communities
-    fuzzy_query = fulltext_query(query, group_ids)
+    fuzzy_query = fulltext_query(query, group_ids, driver.fulltext_syntax)
     if fuzzy_query == '':
         return []
 
@@ -740,7 +747,7 @@ async def get_relevant_nodes(
             'uuid': node.uuid,
             'name': node.name,
             'name_embedding': node.name_embedding,
-            'fulltext_query': fulltext_query(node.name, [node.group_id]),
+            'fulltext_query': fulltext_query(node.name, [node.group_id], driver.fulltext_syntax),
         }
         for node in nodes
     ]

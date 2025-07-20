@@ -20,7 +20,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from graphiti_core.embedder.voyage import (
+from graphiti.graphiti_core.embedder.voyage import (
     DEFAULT_EMBEDDING_MODEL,
     VoyageAIEmbedder,
     VoyageAIEmbedderConfig,

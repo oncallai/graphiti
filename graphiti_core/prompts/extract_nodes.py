@@ -71,8 +71,8 @@ class Versions(TypedDict):
 
 
 def extract_message(context: dict[str, Any]) -> list[Message]:
-    sys_prompt = """You are an AI assistant that extracts entity nodes from conversational messages. 
-    Your primary task is to extract and classify the speaker and other significant entities mentioned in the conversation."""
+    sys_prompt = """You are an AI assistant specialized in extracting application entities and infrastructure dependencies from GitHub repository metadata and application code. 
+    Your primary task is to identify applications and their infrastructure components (databases, caches, message queues, etc.)."""
 
     user_prompt = f"""
 <PREVIOUS MESSAGES>
@@ -89,27 +89,67 @@ def extract_message(context: dict[str, Any]) -> list[Message]:
 
 Instructions:
 
-You are given a conversation context and a CURRENT MESSAGE. Your task is to extract **entity nodes** mentioned **explicitly or implicitly** in the CURRENT MESSAGE.
-Pronoun references such as he/she/they or this/that/those should be disambiguated to the names of the 
-reference entities.
+You are analyzing GitHub repository metadata and application code. Your task is to extract **ONLY** application entities and infrastructure dependency entities from the CURRENT MESSAGE.
 
-1. **Speaker Extraction**: Always extract the speaker (the part before the colon `:` in each dialogue line) as the first entity node.
-   - If the speaker is mentioned again in the message, treat both mentions as a **single entity**.
+## EXTRACTION FOCUS:
 
-2. **Entity Identification**:
-   - Extract all significant entities, concepts, or actors that are **explicitly or implicitly** mentioned in the CURRENT MESSAGE.
-   - **Exclude** entities mentioned only in the PREVIOUS MESSAGES (they are for context only).
+### 1. **Application Entities** - Extract these types:
+   - Application names (services, microservices, web apps, APIs)
+   - Software projects or modules
+   - GitHub repositories (when they represent applications)
+   - Software components or systems
 
-3. **Entity Classification**:
-   - Use the descriptions in ENTITY TYPES to classify each extracted entity.
-   - Assign the appropriate `entity_type_id` for each one.
+### 2. **Infrastructure Dependencies** - Extract these types:
+   - **Databases**: PostgreSQL, MySQL, MongoDB, Redis, etc.
+   - **Caches**: Redis, Memcached, etc.
+   - **Message Queues**: RabbitMQ, Kafka, SQS, etc.
+   - **Storage Systems**: S3, MinIO, etc.
+   - **External Services**: Third-party APIs, cloud services
+   - **Infrastructure Components**: Load balancers, proxies, etc.
 
-4. **Exclusions**:
-   - Do NOT extract entities representing relationships or actions.
-   - Do NOT extract dates, times, or other temporal information—these will be handled separately.
+## EXTRACTION RULES:
 
-5. **Formatting**:
-   - Be **explicit and unambiguous** in naming entities (e.g., use full names when available).
+### **DO EXTRACT**:
+- Application names from repository names, package.json, requirements.txt, etc.
+- Database names, connection strings, or database references
+- Cache names or Redis instance references
+- Service names from docker-compose.yml, kubernetes manifests
+- Infrastructure component names from configuration files
+- Dependency names from package managers (npm, pip, maven, etc.)
+
+### **DO NOT EXTRACT**:
+- People, users, developers, or team names
+- Companies or organizations (unless they are infrastructure services)
+- Dates, times, versions, or temporal information
+- File names, directory paths, or code snippets
+- Programming languages, frameworks (unless they are the main application)
+- Generic terms like "API", "service", "database" without specific names
+- Configuration parameters, environment variables, or settings
+- Documentation, comments, or descriptive text
+
+## NAMING CONVENTIONS:
+
+### **Applications**:
+- Use the actual application/service name (e.g., "user-service", "e-commerce-platform")
+- For GitHub repos, use the repository name if it represents an application
+- Use descriptive names that identify the specific application
+
+### **Infrastructure**:
+- Use specific instance names when available (e.g., "users_db", "session_cache")
+- For generic references, use the service type + context (e.g., "postgres_main", "redis_cache")
+- Maintain consistency with naming patterns in the codebase
+
+## ENTITY CLASSIFICATION:
+- Use the descriptions in ENTITY TYPES to classify each extracted entity
+- Assign the appropriate `entity_type_id` for each application or infrastructure component
+- Ensure infrastructure dependencies are properly classified by their type
+
+## QUALITY REQUIREMENTS:
+- Extract only entities that are **explicitly mentioned** in the CURRENT MESSAGE
+- Use **exact names** from the source material - do not modify or interpret
+- Ensure entity names are **specific and meaningful**
+- Avoid generic or placeholder names
+- Focus on **concrete, identifiable** applications and infrastructure components
 
 {context['custom_prompt']}
 """
@@ -120,8 +160,8 @@ reference entities.
 
 
 def extract_json(context: dict[str, Any]) -> list[Message]:
-    sys_prompt = """You are an AI assistant that extracts entity nodes from JSON. 
-    Your primary task is to extract and classify relevant entities from JSON files"""
+    sys_prompt = """You are an AI assistant specialized in extracting application entities and infrastructure dependencies from JSON data. 
+    Your primary task is to identify applications and their infrastructure components from JSON configuration files, package manifests, and metadata."""
 
     user_prompt = f"""
 <SOURCE DESCRIPTION>:
@@ -134,15 +174,72 @@ def extract_json(context: dict[str, Any]) -> list[Message]:
 {context['entity_types']}
 </ENTITY TYPES>
 
+Instructions:
+
+You are analyzing JSON data that may contain application metadata, configuration files, package manifests, or infrastructure definitions. Your task is to extract **ONLY** application entities and infrastructure dependency entities from the JSON.
+
+## EXTRACTION FOCUS:
+
+### 1. **Application Entities** - Extract from JSON fields like:
+   - Application names from "name", "application_name", "service_name" fields
+   - Repository names from "repository", "repo", "github_repo" fields
+   - Project names from package.json, composer.json, pom.xml equivalents
+   - Service definitions from docker-compose.yml, kubernetes manifests
+   - Module or component names from configuration files
+
+### 2. **Infrastructure Dependencies** - Extract from JSON fields like:
+   - **Database references**: "database", "db_name", "postgres", "mongodb", etc.
+   - **Cache references**: "redis", "cache", "memcached", etc.
+   - **Message Queue references**: "rabbitmq", "kafka", "sqs", etc.
+   - **Storage references**: "s3", "storage", "bucket", etc.
+   - **External Service references**: API endpoints, cloud services
+   - **Dependencies**: from "dependencies", "requires", "imports" sections
+
+## JSON EXTRACTION RULES:
+
+### **DO EXTRACT**:
+- Values from fields that represent application or service names
+- Database connection strings or database names
+- Cache service names or Redis instance references
+- Infrastructure service names from configuration
+- Dependency names from package manager files
+- Service names from orchestration files (docker-compose, k8s)
+- External service references or API names
+
+### **DO NOT EXTRACT**:
+- Version numbers, timestamps, or dates
+- Configuration parameters, environment variables
+- File paths, URLs, or connection strings (extract only the service name)
+- Generic field names or JSON keys
+- Metadata like "created_at", "updated_at", "version"
+- User information, team names, or personal data
+- Documentation fields, descriptions, or comments
+
+## NAMING CONVENTIONS:
+
+### **Applications**:
+- Use the exact value from name fields (e.g., "user-service", "payment-api")
+- For repository references, use the repo name if it represents an application
+- Maintain original casing and formatting when meaningful
+
+### **Infrastructure**:
+- Use specific instance names when available (e.g., "users_db", "session_cache")
+- Extract service type from connection strings (e.g., "postgresql" from postgres://...)
+- Use canonical service names for well-known infrastructure (e.g., "redis", "mongodb")
+
+## ENTITY CLASSIFICATION:
+- Use the descriptions in ENTITY TYPES to classify each extracted entity
+- Assign the appropriate `entity_type_id` for each application or infrastructure component
+- Ensure infrastructure dependencies are properly classified by their type
+
+## QUALITY REQUIREMENTS:
+- Extract only entities that are **explicitly present** in the JSON values
+- Use **exact values** from JSON fields - do not modify or interpret
+- Focus on **concrete, identifiable** applications and infrastructure components
+- Avoid extracting JSON keys unless they represent entity names
+- Ensure extracted names are **specific and meaningful**
+
 {context['custom_prompt']}
-
-Given the above source description and JSON, extract relevant entities from the provided JSON.
-For each entity extracted, also determine its entity type based on the provided ENTITY TYPES and their descriptions.
-Indicate the classified entity type by providing its entity_type_id.
-
-Guidelines:
-1. Always try to extract an entities that the JSON represents. This will often be something like a "name" or "user field
-2. Do NOT extract any properties that contain dates
 """
     return [
         Message(role='system', content=sys_prompt),
@@ -151,8 +248,9 @@ Guidelines:
 
 
 def extract_text(context: dict[str, Any]) -> list[Message]:
-    sys_prompt = """You are an AI assistant that extracts entity nodes from text. 
-    Your primary task is to extract and classify the speaker and other significant entities mentioned in the provided text."""
+
+    sys_prompt = """You are an AI assistant specialized in extracting application entities and infrastructure dependencies from text data. 
+    Your primary task is to identify applications and their infrastructure components from documentation, code comments, README files, and technical descriptions."""
 
     user_prompt = f"""
 <TEXT>
@@ -162,17 +260,90 @@ def extract_text(context: dict[str, Any]) -> list[Message]:
 {context['entity_types']}
 </ENTITY TYPES>
 
-Given the above text, extract entities from the TEXT that are explicitly or implicitly mentioned.
-For each entity extracted, also determine its entity type based on the provided ENTITY TYPES and their descriptions.
-Indicate the classified entity type by providing its entity_type_id.
+Instructions:
+
+You are analyzing text that may contain technical documentation, code comments, README files, or descriptions of software systems. Your task is to extract **ONLY** application entities and infrastructure dependency entities from the TEXT.
+
+## EXTRACTION FOCUS:
+
+### 1. **Application Entities** - Extract these types:
+   - Application names, service names, microservices
+   - Software projects, modules, or components
+   - System names or platform names
+   - API names or web service names
+   - Repository names (when they represent applications)
+
+### 2. **Infrastructure Dependencies** - Extract these types:
+   - **Databases**: PostgreSQL, MySQL, MongoDB, Redis, etc.
+   - **Caches**: Redis, Memcached, etc.
+   - **Message Queues**: RabbitMQ, Kafka, SQS, etc.
+   - **Storage Systems**: S3, MinIO, file systems, etc.
+   - **External Services**: Third-party APIs, cloud services
+   - **Infrastructure Components**: Load balancers, proxies, etc.
+
+## TEXT EXTRACTION RULES:
+
+### **DO EXTRACT**:
+- Specific application or service names mentioned in the text
+- Database names or database system references
+- Cache service names or caching system references
+- Message queue or event streaming system names
+- Storage service names or storage system references
+- External API names or third-party service references
+- Infrastructure component names from technical descriptions
+
+### **DO NOT EXTRACT**:
+- People, users, developers, or team names
+- Companies or organizations (unless they are infrastructure services)
+- Dates, times, versions, or temporal information
+- File names, directory paths, or code snippets
+- Programming languages or frameworks (unless they are the main application)
+- Generic terms like "API", "service", "database" without specific names
+- Configuration parameters, environment variables
+- Documentation sections, headers, or descriptive text
+
+## NAMING CONVENTIONS:
+
+### **Applications**:
+- **Custom Applications**: Use the complete, precise name as written in the text
+  - Example: "UserManagementService" → "UserManagementService"
+  - Example: "payment-processing-api" → "payment-processing-api"
+  - Example: "E-Commerce Platform" → "E-Commerce Platform"
+
+### **Infrastructure**:
+- **Third-Party Services**: Use canonical service names (lowercase, standardized)
+  - Example: "PostgreSQL Database" → "postgresql"
+  - Example: "Redis Cache" → "redis"
+  - Example: "AWS S3 Storage" → "s3"
+  - Example: "MongoDB Database" → "mongodb"
+  - Example: "RabbitMQ Message Broker" → "rabbitmq"
+  - Example: "Elasticsearch Service" → "elasticsearch"
+
+- **Cloud Services**: Use standard service identifiers
+  - Example: "AWS Lambda Function" → "lambda"
+  - Example: "Azure Blob Storage" → "blob-storage"
+  - Example: "Google Cloud Pub/Sub" → "pubsub"
+  - Example: "AWS EC2 Instance" → "ec2"
+
+- **Specific Instances**: Use instance names when available
+  - Example: "users_db database" → "users_db"
+  - Example: "session_cache Redis" → "session_cache"
+
+## ENTITY CLASSIFICATION:
+- Use the descriptions in ENTITY TYPES to classify each extracted entity
+- Assign the appropriate `entity_type_id` for each application or infrastructure component
+- Ensure infrastructure dependencies are properly classified by their type
+
+## QUALITY REQUIREMENTS:
+- Extract only entities that are **explicitly mentioned** in the TEXT
+- Use **exact names** from the text - do not modify or interpret unnecessarily
+- Focus on **concrete, identifiable** applications and infrastructure components
+- Avoid generic or placeholder names
+- Ensure entity names are **specific and meaningful**
+- Maintain consistency with established naming conventions
+- Verify that extracted names are complete and accurate
 
 {context['custom_prompt']}
-
-Guidelines:
-1. Extract significant entities, concepts, or actors mentioned in the conversation.
-2. Avoid creating nodes for relationships or actions.
-3. Avoid creating nodes for temporal information like dates, times or years (these will be added to edges later).
-4. Be as explicit as possible in your node names, using full names and avoiding abbreviations.
 """
     return [
         Message(role='system', content=sys_prompt),

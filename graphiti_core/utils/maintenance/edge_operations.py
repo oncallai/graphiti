@@ -21,24 +21,24 @@ from time import time
 from pydantic import BaseModel
 from typing_extensions import LiteralString
 
-from graphiti_core.driver.driver import GraphDriver
-from graphiti_core.edges import (
+from graphiti.graphiti_core.driver.driver import GraphDriver
+from graphiti.graphiti_core.edges import (
     CommunityEdge,
     EntityEdge,
     EpisodicEdge,
     create_entity_edge_embeddings,
 )
-from graphiti_core.graphiti_types import GraphitiClients
-from graphiti_core.helpers import MAX_REFLEXION_ITERATIONS, semaphore_gather
-from graphiti_core.llm_client import LLMClient
-from graphiti_core.llm_client.config import ModelSize
-from graphiti_core.nodes import CommunityNode, EntityNode, EpisodicNode
-from graphiti_core.prompts import prompt_library
-from graphiti_core.prompts.dedupe_edges import EdgeDuplicate, UniqueFacts
-from graphiti_core.prompts.extract_edges import ExtractedEdges, MissingFacts
-from graphiti_core.search.search_filters import SearchFilters
-from graphiti_core.search.search_utils import get_edge_invalidation_candidates, get_relevant_edges
-from graphiti_core.utils.datetime_utils import ensure_utc, utc_now
+from graphiti.graphiti_core.graphiti_types import GraphitiClients
+from graphiti.graphiti_core.helpers import MAX_REFLEXION_ITERATIONS, semaphore_gather
+from graphiti.graphiti_core.llm_client import LLMClient
+from graphiti.graphiti_core.llm_client.config import ModelSize
+from graphiti.graphiti_core.nodes import CommunityNode, EntityNode, EpisodicNode
+from graphiti.graphiti_core.prompts import prompt_library
+from graphiti.graphiti_core.prompts.dedupe_edges import EdgeDuplicate, UniqueFacts
+from graphiti.graphiti_core.prompts.extract_edges import ExtractedEdges, MissingFacts
+from graphiti.graphiti_core.search.search_filters import SearchFilters
+from graphiti.graphiti_core.search.search_utils import get_edge_invalidation_candidates, get_relevant_edges
+from graphiti.graphiti_core.utils.datetime_utils import ensure_utc, utc_now
 
 logger = logging.getLogger(__name__)
 
@@ -274,8 +274,14 @@ async def resolve_extracted_edges(
     # Determine which edge types are relevant for each edge
     edge_types_lst: list[dict[str, BaseModel]] = []
     for extracted_edge in extracted_edges:
-        source_node_labels = uuid_entity_map[extracted_edge.source_node_uuid].labels + ['Entity']
-        target_node_labels = uuid_entity_map[extracted_edge.target_node_uuid].labels + ['Entity']
+        source_node = uuid_entity_map.get(extracted_edge.source_node_uuid)
+        target_node = uuid_entity_map.get(extracted_edge.target_node_uuid)
+        source_node_labels = (
+            source_node.labels + ['Entity'] if source_node is not None else ['Entity']
+        )
+        target_node_labels = (
+            target_node.labels + ['Entity'] if target_node is not None else ['Entity']
+        )
         label_tuples = [
             (source_label, target_label)
             for source_label in source_node_labels
@@ -444,14 +450,14 @@ async def resolve_extracted_edge(
         }
 
         edge_model = edge_types.get(fact_type)
+        if edge_model is not None and len(edge_model.model_fields) != 0:
+            edge_attributes_response = await llm_client.generate_response(
+                prompt_library.extract_edges.extract_attributes(edge_attributes_context),
+                response_model=edge_model,  # type: ignore
+                model_size=ModelSize.small,
+            )
 
-        edge_attributes_response = await llm_client.generate_response(
-            prompt_library.extract_edges.extract_attributes(edge_attributes_context),
-            response_model=edge_model,  # type: ignore
-            model_size=ModelSize.small,
-        )
-
-        resolved_edge.attributes = edge_attributes_response
+            resolved_edge.attributes = edge_attributes_response
 
     end = time()
     logger.debug(

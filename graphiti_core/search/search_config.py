@@ -18,9 +18,9 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from graphiti_core.edges import EntityEdge
-from graphiti_core.nodes import CommunityNode, EntityNode, EpisodicNode
-from graphiti_core.search.search_utils import (
+from graphiti.graphiti_core.edges import EntityEdge
+from graphiti.graphiti_core.nodes import CommunityNode, EntityNode, EpisodicNode
+from graphiti.graphiti_core.search.search_utils import (
     DEFAULT_MIN_SCORE,
     DEFAULT_MMR_LAMBDA,
     MAX_SEARCH_DEPTH,

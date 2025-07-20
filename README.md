@@ -15,7 +15,7 @@ Graphiti
 [![MyPy Check](https://github.com/getzep/Graphiti/actions/workflows/typecheck.yml/badge.svg)](https://github.com/getzep/Graphiti/actions/workflows/typecheck.yml)
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/getzep/graphiti)
-[![Discord](https://dcbadge.vercel.app/api/server/W8Kw6bsgXQ?style=flat)](https://discord.com/invite/W8Kw6bsgXQ)
+[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?&logo=discord&logoColor=white)](https://discord.com/invite/W8Kw6bsgXQ)
 [![arXiv](https://img.shields.io/badge/arXiv-2501.13956-b31b1b.svg?style=flat)](https://arxiv.org/abs/2501.13956)
 [![Release](https://img.shields.io/github/v/release/getzep/graphiti?style=flat&label=Release&color=limegreen)](https://github.com/getzep/graphiti/releases)
 
@@ -225,8 +225,8 @@ As of v0.17.0, if you need to customize your database configuration, you can ins
 #### Neo4j with Custom Database Name
 
 ```python
-from graphiti_core import Graphiti
-from graphiti_core.driver.neo4j_driver import Neo4jDriver
+from graphiti.graphiti_core import Graphiti
+from graphiti.graphiti_core.driver.neo4j_driver import Neo4jDriver
 
 # Create a Neo4j driver with custom database name
 driver = Neo4jDriver(
@@ -243,8 +243,8 @@ graphiti = Graphiti(graph_driver=driver)
 #### FalkorDB with Custom Database Name
 
 ```python
-from graphiti_core import Graphiti
-from graphiti_core.driver.falkordb_driver import FalkorDriver
+from graphiti.graphiti_core import Graphiti
+from graphiti.graphiti_core.driver.falkordb_driver import FalkorDriver
 
 # Create a FalkorDB driver with custom database name
 driver = FalkorDriver(
@@ -273,10 +273,10 @@ Graphiti supports Azure OpenAI for both LLM inference and embeddings. Azure depl
 
 ```python
 from openai import AsyncAzureOpenAI
-from graphiti_core import Graphiti
-from graphiti_core.llm_client import LLMConfig, OpenAIClient
-from graphiti_core.embedder.openai import OpenAIEmbedder, OpenAIEmbedderConfig
-from graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
+from graphiti.graphiti_core import Graphiti
+from graphiti.graphiti_core.llm_client import LLMConfig, OpenAIClient
+from graphiti.graphiti_core.embedder.openai import OpenAIEmbedder, OpenAIEmbedderConfig
+from graphiti.graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
 
 # Azure OpenAI configuration - use separate endpoints for different services
 api_key = "<your-api-key>"
@@ -346,10 +346,10 @@ pip install "graphiti-core[google-genai]"
 ```
 
 ```python
-from graphiti_core import Graphiti
-from graphiti_core.llm_client.gemini_client import GeminiClient, LLMConfig
-from graphiti_core.embedder.gemini import GeminiEmbedder, GeminiEmbedderConfig
-from graphiti_core.cross_encoder.gemini_reranker_client import GeminiRerankerClient
+from graphiti.graphiti_core import Graphiti
+from graphiti.graphiti_core.llm_client.gemini_client import GeminiClient, LLMConfig
+from graphiti.graphiti_core.embedder.gemini import GeminiEmbedder, GeminiEmbedderConfig
+from graphiti.graphiti_core.cross_encoder.gemini_reranker_client import GeminiRerankerClient
 
 # Google API key configuration
 api_key = "<your-google-api-key>"
@@ -393,11 +393,11 @@ ollama pull deepseek-r1:7b # LLM
 ollama pull nomic-embed-text # embeddings
 
 ```python
-from graphiti_core import Graphiti
-from graphiti_core.llm_client.config import LLMConfig
-from graphiti_core.llm_client.openai_client import OpenAIClient
-from graphiti_core.embedder.openai import OpenAIEmbedder, OpenAIEmbedderConfig
-from graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
+from graphiti.graphiti_core import Graphiti
+from graphiti.graphiti_core.llm_client.config import LLMConfig
+from graphiti.graphiti_core.llm_client.openai_client import OpenAIClient
+from graphiti.graphiti_core.embedder.openai import OpenAIEmbedder, OpenAIEmbedderConfig
+from graphiti.graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
 
 # Configure Ollama LLM client
 llm_config = LLMConfig(
@@ -506,7 +506,7 @@ import os
 os.environ['GRAPHITI_TELEMETRY_ENABLED'] = 'false'
 
 # Then initialize Graphiti as usual
-from graphiti_core import Graphiti
+from graphiti.graphiti_core import Graphiti
 graphiti = Graphiti(...)
 ```
 

@@ -23,9 +23,9 @@ from logging import INFO
 
 from dotenv import load_dotenv
 
-from graphiti_core import Graphiti
-from graphiti_core.nodes import EpisodeType
-from graphiti_core.search.search_config_recipes import NODE_HYBRID_SEARCH_RRF
+from graphiti.graphiti_core import Graphiti
+from graphiti.graphiti_core.nodes import EpisodeType
+from graphiti.graphiti_core.search.search_config_recipes import NODE_HYBRID_SEARCH_RRF
 
 #################################################
 # CONFIGURATION
@@ -48,7 +48,7 @@ load_dotenv()
 # Make sure Neo4j Desktop is running with a local DBMS started
 neo4j_uri = os.environ.get('NEO4J_URI', 'bolt://localhost:7687')
 neo4j_user = os.environ.get('NEO4J_USER', 'neo4j')
-neo4j_password = os.environ.get('NEO4J_PASSWORD', 'password')
+neo4j_password = os.environ.get('NEO4J_PASSWORD', 'test12345')
 
 if not neo4j_uri or not neo4j_user or not neo4j_password:
     raise ValueError('NEO4J_URI, NEO4J_USER, and NEO4J_PASSWORD must be set')
@@ -129,101 +129,101 @@ async def main():
             )
             print(f'Added episode: Freakonomics Radio {i} ({episode["type"].value})')
 
-        #################################################
-        # BASIC SEARCH
-        #################################################
-        # The simplest way to retrieve relationships (edges)
-        # from Graphiti is using the search method, which
-        # performs a hybrid search combining semantic
-        # similarity and BM25 text retrieval.
-        #################################################
+        # #################################################
+        # # BASIC SEARCH
+        # #################################################
+        # # The simplest way to retrieve relationships (edges)
+        # # from Graphiti is using the search method, which
+        # # performs a hybrid search combining semantic
+        # # similarity and BM25 text retrieval.
+        # #################################################
 
-        # Perform a hybrid search combining semantic similarity and BM25 retrieval
-        print("\nSearching for: 'Who was the California Attorney General?'")
-        results = await graphiti.search('Who was the California Attorney General?')
+        # # Perform a hybrid search combining semantic similarity and BM25 retrieval
+        # print("\nSearching for: 'Who was the California Attorney General?'")
+        # results = await graphiti.search('Who was the California Attorney General?')
 
-        # Print search results
-        print('\nSearch Results:')
-        for result in results:
-            print(f'UUID: {result.uuid}')
-            print(f'Fact: {result.fact}')
-            if hasattr(result, 'valid_at') and result.valid_at:
-                print(f'Valid from: {result.valid_at}')
-            if hasattr(result, 'invalid_at') and result.invalid_at:
-                print(f'Valid until: {result.invalid_at}')
-            print('---')
+        # # Print search results
+        # print('\nSearch Results:')
+        # for result in results:
+        #     print(f'UUID: {result.uuid}')
+        #     print(f'Fact: {result.fact}')
+        #     if hasattr(result, 'valid_at') and result.valid_at:
+        #         print(f'Valid from: {result.valid_at}')
+        #     if hasattr(result, 'invalid_at') and result.invalid_at:
+        #         print(f'Valid until: {result.invalid_at}')
+        #     print('---')
 
-        #################################################
-        # CENTER NODE SEARCH
-        #################################################
-        # For more contextually relevant results, you can
-        # use a center node to rerank search results based
-        # on their graph distance to a specific node
-        #################################################
+        # #################################################
+        # # CENTER NODE SEARCH
+        # #################################################
+        # # For more contextually relevant results, you can
+        # # use a center node to rerank search results based
+        # # on their graph distance to a specific node
+        # #################################################
 
-        # Use the top search result's UUID as the center node for reranking
-        if results and len(results) > 0:
-            # Get the source node UUID from the top result
-            center_node_uuid = results[0].source_node_uuid
+        # # Use the top search result's UUID as the center node for reranking
+        # if results and len(results) > 0:
+        #     # Get the source node UUID from the top result
+        #     center_node_uuid = results[0].source_node_uuid
 
-            print('\nReranking search results based on graph distance:')
-            print(f'Using center node UUID: {center_node_uuid}')
+        #     print('\nReranking search results based on graph distance:')
+        #     print(f'Using center node UUID: {center_node_uuid}')
 
-            reranked_results = await graphiti.search(
-                'Who was the California Attorney General?', center_node_uuid=center_node_uuid
-            )
+        #     reranked_results = await graphiti.search(
+        #         'Who was the California Attorney General?', center_node_uuid=center_node_uuid
+        #     )
 
-            # Print reranked search results
-            print('\nReranked Search Results:')
-            for result in reranked_results:
-                print(f'UUID: {result.uuid}')
-                print(f'Fact: {result.fact}')
-                if hasattr(result, 'valid_at') and result.valid_at:
-                    print(f'Valid from: {result.valid_at}')
-                if hasattr(result, 'invalid_at') and result.invalid_at:
-                    print(f'Valid until: {result.invalid_at}')
-                print('---')
-        else:
-            print('No results found in the initial search to use as center node.')
+        #     # Print reranked search results
+        #     print('\nReranked Search Results:')
+        #     for result in reranked_results:
+        #         print(f'UUID: {result.uuid}')
+        #         print(f'Fact: {result.fact}')
+        #         if hasattr(result, 'valid_at') and result.valid_at:
+        #             print(f'Valid from: {result.valid_at}')
+        #         if hasattr(result, 'invalid_at') and result.invalid_at:
+        #             print(f'Valid until: {result.invalid_at}')
+        #         print('---')
+        # else:
+        #     print('No results found in the initial search to use as center node.')
 
-        #################################################
-        # NODE SEARCH USING SEARCH RECIPES
-        #################################################
-        # Graphiti provides predefined search recipes
-        # optimized for different search scenarios.
-        # Here we use NODE_HYBRID_SEARCH_RRF for retrieving
-        # nodes directly instead of edges.
-        #################################################
+        # #################################################
+        # # NODE SEARCH USING SEARCH RECIPES
+        # #################################################
+        # # Graphiti provides predefined search recipes
+        # # optimized for different search scenarios.
+        # # Here we use NODE_HYBRID_SEARCH_RRF for retrieving
+        # # nodes directly instead of edges.
+        # #################################################
 
-        # Example: Perform a node search using _search method with standard recipes
-        print(
-            '\nPerforming node search using _search method with standard recipe NODE_HYBRID_SEARCH_RRF:'
-        )
+        # # Example: Perform a node search using _search method with standard recipes
+        # print(
+        #     '\nPerforming node search using _search method with standard recipe NODE_HYBRID_SEARCH_RRF:'
+        # )
 
-        # Use a predefined search configuration recipe and modify its limit
-        node_search_config = NODE_HYBRID_SEARCH_RRF.model_copy(deep=True)
-        node_search_config.limit = 5  # Limit to 5 results
+        # # Use a predefined search configuration recipe and modify its limit
+        # node_search_config = NODE_HYBRID_SEARCH_RRF.model_copy(deep=True)
+        # node_search_config.limit = 5  # Limit to 5 results
 
-        # Execute the node search
-        node_search_results = await graphiti._search(
-            query='California Governor',
-            config=node_search_config,
-        )
+        # # Execute the node search
+        # node_search_results = await graphiti._search(
+        #     query='California Governor',
+        #     config=node_search_config,
+        # )
 
-        # Print node search results
-        print('\nNode Search Results:')
-        for node in node_search_results.nodes:
-            print(f'Node UUID: {node.uuid}')
-            print(f'Node Name: {node.name}')
-            node_summary = node.summary[:100] + '...' if len(node.summary) > 100 else node.summary
-            print(f'Content Summary: {node_summary}')
-            print(f'Node Labels: {", ".join(node.labels)}')
-            print(f'Created At: {node.created_at}')
-            if hasattr(node, 'attributes') and node.attributes:
-                print('Attributes:')
-                for key, value in node.attributes.items():
-                    print(f'  {key}: {value}')
-            print('---')
+        # # Print node search results
+        # print('\nNode Search Results:')
+        # for node in node_search_results.nodes:
+        #     print(f'Node UUID: {node.uuid}')
+        #     print(f'Node Name: {node.name}')
+        #     node_summary = node.summary[:100] + '...' if len(node.summary) > 100 else node.summary
+        #     print(f'Content Summary: {node_summary}')
+        #     print(f'Node Labels: {", ".join(node.labels)}')
+        #     print(f'Created At: {node.created_at}')
+        #     if hasattr(node, 'attributes') and node.attributes:
+        #         print('Attributes:')
+        #         for key, value in node.attributes.items():
+        #             print(f'  {key}: {value}')
+        #     print('---')
 
     finally:
         #################################################

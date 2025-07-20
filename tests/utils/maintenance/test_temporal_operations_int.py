@@ -20,11 +20,11 @@ from datetime import timedelta
 import pytest
 from dotenv import load_dotenv
 
-from graphiti_core.edges import EntityEdge
-from graphiti_core.llm_client import LLMConfig, OpenAIClient
-from graphiti_core.nodes import EntityNode, EpisodeType, EpisodicNode
-from graphiti_core.utils.datetime_utils import utc_now
-from graphiti_core.utils.maintenance.temporal_operations import (
+from graphiti.graphiti_core.edges import EntityEdge
+from graphiti.graphiti_core.llm_client import LLMConfig, OpenAIClient
+from graphiti.graphiti_core.nodes import EntityNode, EpisodeType, EpisodicNode
+from graphiti.graphiti_core.utils.datetime_utils import utc_now
+from graphiti.graphiti_core.utils.maintenance.temporal_operations import (
     get_edge_contradictions,
 )
 

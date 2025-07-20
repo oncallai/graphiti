@@ -16,8 +16,8 @@ limitations under the License.
 
 from pydantic import BaseModel
 
-from graphiti_core.errors import EntityTypeValidationError
-from graphiti_core.nodes import EntityNode
+from graphiti.graphiti_core.errors import EntityTypeValidationError
+from graphiti.graphiti_core.nodes import EntityNode
 
 
 def validate_entity_types(

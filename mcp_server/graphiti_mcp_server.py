@@ -18,22 +18,22 @@ from mcp.server.fastmcp import FastMCP
 from openai import AsyncAzureOpenAI
 from pydantic import BaseModel, Field
 
-from graphiti_core import Graphiti
-from graphiti_core.edges import EntityEdge
-from graphiti_core.embedder.azure_openai import AzureOpenAIEmbedderClient
-from graphiti_core.embedder.client import EmbedderClient
-from graphiti_core.embedder.openai import OpenAIEmbedder, OpenAIEmbedderConfig
-from graphiti_core.llm_client import LLMClient
-from graphiti_core.llm_client.azure_openai_client import AzureOpenAILLMClient
-from graphiti_core.llm_client.config import LLMConfig
-from graphiti_core.llm_client.openai_client import OpenAIClient
-from graphiti_core.nodes import EpisodeType, EpisodicNode
-from graphiti_core.search.search_config_recipes import (
+from graphiti.graphiti_core import Graphiti
+from graphiti.graphiti_core.edges import EntityEdge
+from graphiti.graphiti_core.embedder.azure_openai import AzureOpenAIEmbedderClient
+from graphiti.graphiti_core.embedder.client import EmbedderClient
+from graphiti.graphiti_core.embedder.openai import OpenAIEmbedder, OpenAIEmbedderConfig
+from graphiti.graphiti_core.llm_client import LLMClient
+from graphiti.graphiti_core.llm_client.azure_openai_client import AzureOpenAILLMClient
+from graphiti.graphiti_core.llm_client.config import LLMConfig
+from graphiti.graphiti_core.llm_client.openai_client import OpenAIClient
+from graphiti.graphiti_core.nodes import EpisodeType, EpisodicNode
+from graphiti.graphiti_core.search.search_config_recipes import (
     NODE_HYBRID_SEARCH_NODE_DISTANCE,
     NODE_HYBRID_SEARCH_RRF,
 )
-from graphiti_core.search.search_filters import SearchFilters
-from graphiti_core.utils.maintenance.graph_data_operations import clear_data
+from graphiti.graphiti_core.search.search_filters import SearchFilters
+from graphiti.graphiti_core.utils.maintenance.graph_data_operations import clear_data
 
 load_dotenv()
 

@@ -18,7 +18,7 @@ limitations under the License.
 
 import pytest
 
-from graphiti_core.llm_client.errors import EmptyResponseError, RateLimitError, RefusalError
+from graphiti.graphiti_core.llm_client.errors import EmptyResponseError, RateLimitError, RefusalError
 
 
 class TestRateLimitError:

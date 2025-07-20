@@ -17,7 +17,7 @@ limitations under the License.
 import logging
 from time import time
 
-from graphiti_core.embedder.client import EmbedderClient
+from graphiti.graphiti_core.embedder.client import EmbedderClient
 
 logger = logging.getLogger(__name__)
 

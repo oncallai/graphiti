@@ -16,8 +16,8 @@ limitations under the License.
 
 import json
 
-from graphiti_core.edges import EntityEdge
-from graphiti_core.search.search_config import SearchResults
+from graphiti.graphiti_core.edges import EntityEdge
+from graphiti.graphiti_core.search.search_config import SearchResults
 
 
 def format_edge_date_range(edge: EntityEdge) -> str:

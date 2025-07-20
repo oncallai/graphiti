@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal
 
-from graphiti_core.utils.datetime_utils import utc_now
+from graphiti.graphiti_core.utils.datetime_utils import utc_now
 from pydantic import BaseModel, Field
 
 
