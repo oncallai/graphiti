@@ -21,10 +21,10 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from pydantic import BaseModel
 
-from graphiti_core.llm_client.config import LLMConfig, ModelSize
-from graphiti_core.llm_client.errors import RateLimitError
-from graphiti_core.llm_client.gemini_client import DEFAULT_MODEL, DEFAULT_SMALL_MODEL, GeminiClient
-from graphiti_core.prompts.models import Message
+from graphiti.graphiti_core.llm_client.config import LLMConfig, ModelSize
+from graphiti.graphiti_core.llm_client.errors import RateLimitError
+from graphiti.graphiti_core.llm_client.gemini_client import DEFAULT_MODEL, DEFAULT_SMALL_MODEL, GeminiClient
+from graphiti.graphiti_core.prompts.models import Message
 
 
 # Test model for response testing

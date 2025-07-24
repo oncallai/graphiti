@@ -22,10 +22,10 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from pydantic import BaseModel
 
-from graphiti_core.llm_client.anthropic_client import AnthropicClient
-from graphiti_core.llm_client.config import LLMConfig
-from graphiti_core.llm_client.errors import RateLimitError, RefusalError
-from graphiti_core.prompts.models import Message
+from graphiti.graphiti_core.llm_client.anthropic_client import AnthropicClient
+from graphiti.graphiti_core.llm_client.config import LLMConfig
+from graphiti.graphiti_core.llm_client.errors import RateLimitError, RefusalError
+from graphiti.graphiti_core.prompts.models import Message
 
 
 # Rename class to avoid pytest collection as a test class

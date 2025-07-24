@@ -23,20 +23,20 @@ import numpy as np
 from numpy._typing import NDArray
 from typing_extensions import LiteralString
 
-from graphiti_core.driver.driver import GraphDriver
-from graphiti_core.edges import EntityEdge, get_entity_edge_from_record
-from graphiti_core.graph_queries import (
+from graphiti.graphiti_core.driver.driver import GraphDriver
+from graphiti.graphiti_core.edges import EntityEdge, get_entity_edge_from_record
+from graphiti.graphiti_core.graph_queries import (
     get_nodes_query,
     get_relationships_query,
     get_vector_cosine_func_query,
 )
-from graphiti_core.helpers import (
+from graphiti.graphiti_core.helpers import (
     RUNTIME_QUERY,
     lucene_sanitize,
     normalize_l2,
     semaphore_gather,
 )
-from graphiti_core.nodes import (
+from graphiti.graphiti_core.nodes import (
     ENTITY_NODE_RETURN,
     CommunityNode,
     EntityNode,
@@ -45,7 +45,7 @@ from graphiti_core.nodes import (
     get_entity_node_from_record,
     get_episodic_node_from_record,
 )
-from graphiti_core.search.search_filters import (
+from graphiti.graphiti_core.search.search_filters import (
     SearchFilters,
     edge_search_filter_query_constructor,
     node_search_filter_query_constructor,
@@ -340,7 +340,7 @@ async def node_fulltext_search(
     limit=RELEVANT_SCHEMA_LIMIT,
 ) -> list[EntityNode]:
     # BM25 search to get top nodes
-    fuzzy_query = fulltext_query(query, group_ids, driver.fulltext_syntax)
+    fuzzy_query = fulltext_query(query, group_ids)
     if fuzzy_query == '':
         return []
     filter_query, filter_params = node_search_filter_query_constructor(search_filter)

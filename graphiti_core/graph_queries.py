@@ -9,10 +9,10 @@ from typing import Any
 
 from typing_extensions import LiteralString
 
-from graphiti_core.models.edges.edge_db_queries import (
+from graphiti.graphiti_core.models.edges.edge_db_queries import (
     ENTITY_EDGE_SAVE_BULK,
 )
-from graphiti_core.models.nodes.node_db_queries import (
+from graphiti.graphiti_core.models.nodes.node_db_queries import (
     ENTITY_NODE_SAVE_BULK,
 )
 

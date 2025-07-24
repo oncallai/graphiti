@@ -25,16 +25,16 @@ from uuid import uuid4
 from pydantic import BaseModel, Field
 from typing_extensions import LiteralString
 
-from graphiti_core.driver.driver import GraphDriver
-from graphiti_core.embedder import EmbedderClient
-from graphiti_core.errors import NodeNotFoundError
-from graphiti_core.helpers import parse_db_date
-from graphiti_core.models.nodes.node_db_queries import (
+from graphiti.graphiti_core.driver.driver import GraphDriver
+from graphiti.graphiti_core.embedder import EmbedderClient
+from graphiti.graphiti_core.errors import NodeNotFoundError
+from graphiti.graphiti_core.helpers import parse_db_date
+from graphiti.graphiti_core.models.nodes.node_db_queries import (
     COMMUNITY_NODE_SAVE,
     ENTITY_NODE_SAVE,
     EPISODIC_NODE_SAVE,
 )
-from graphiti_core.utils.datetime_utils import utc_now
+from graphiti.graphiti_core.utils.datetime_utils import utc_now
 
 logger = logging.getLogger(__name__)
 

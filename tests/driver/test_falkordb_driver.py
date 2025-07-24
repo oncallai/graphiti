@@ -22,7 +22,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 try:
-    from graphiti_core.driver.falkordb_driver import FalkorDriver, FalkorDriverSession
+    from graphiti.graphiti_core.driver.falkordb_driver import FalkorDriver, FalkorDriverSession
 
     HAS_FALKORDB = True
 except ImportError:
@@ -307,7 +307,7 @@ class TestDatetimeConversion:
     @unittest.skipIf(not HAS_FALKORDB, 'FalkorDB is not installed')
     def test_convert_datetime_dict(self):
         """Test datetime conversion in nested dictionary."""
-        from graphiti_core.driver.falkordb_driver import convert_datetimes_to_strings
+        from graphiti.graphiti_core.driver.falkordb_driver import convert_datetimes_to_strings
 
         test_datetime = datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
         input_dict = {
@@ -326,7 +326,7 @@ class TestDatetimeConversion:
     @unittest.skipIf(not HAS_FALKORDB, 'FalkorDB is not installed')
     def test_convert_datetime_list_and_tuple(self):
         """Test datetime conversion in lists and tuples."""
-        from graphiti_core.driver.falkordb_driver import convert_datetimes_to_strings
+        from graphiti.graphiti_core.driver.falkordb_driver import convert_datetimes_to_strings
 
         test_datetime = datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
 
@@ -347,7 +347,7 @@ class TestDatetimeConversion:
     @unittest.skipIf(not HAS_FALKORDB, 'FalkorDB is not installed')
     def test_convert_single_datetime(self):
         """Test datetime conversion for single datetime object."""
-        from graphiti_core.driver.falkordb_driver import convert_datetimes_to_strings
+        from graphiti.graphiti_core.driver.falkordb_driver import convert_datetimes_to_strings
 
         test_datetime = datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
         result = convert_datetimes_to_strings(test_datetime)
@@ -356,7 +356,7 @@ class TestDatetimeConversion:
     @unittest.skipIf(not HAS_FALKORDB, 'FalkorDB is not installed')
     def test_convert_other_types_unchanged(self):
         """Test that non-datetime types are returned unchanged."""
-        from graphiti_core.driver.falkordb_driver import convert_datetimes_to_strings
+        from graphiti.graphiti_core.driver.falkordb_driver import convert_datetimes_to_strings
 
         assert convert_datetimes_to_strings('string') == 'string'
         assert convert_datetimes_to_strings(123) == 123

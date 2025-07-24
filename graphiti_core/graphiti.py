@@ -22,37 +22,37 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing_extensions import LiteralString
 
-from graphiti_core.cross_encoder.client import CrossEncoderClient
-from graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
-from graphiti_core.driver.driver import GraphDriver
-from graphiti_core.driver.neo4j_driver import Neo4jDriver
-from graphiti_core.edges import EntityEdge, EpisodicEdge
-from graphiti_core.embedder import EmbedderClient, OpenAIEmbedder
-from graphiti_core.graphiti_types import GraphitiClients
-from graphiti_core.helpers import (
+from graphiti.graphiti_core.cross_encoder.client import CrossEncoderClient
+from graphiti.graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
+from graphiti.graphiti_core.driver.driver import GraphDriver
+from graphiti.graphiti_core.driver.neo4j_driver import Neo4jDriver
+from graphiti.graphiti_core.edges import EntityEdge, EpisodicEdge
+from graphiti.graphiti_core.embedder import EmbedderClient, OpenAIEmbedder
+from graphiti.graphiti_core.graphiti_types import GraphitiClients
+from graphiti.graphiti_core.helpers import (
     get_default_group_id,
     semaphore_gather,
     validate_excluded_entity_types,
     validate_group_id,
 )
-from graphiti_core.llm_client import LLMClient, OpenAIClient
-from graphiti_core.nodes import CommunityNode, EntityNode, EpisodeType, EpisodicNode
-from graphiti_core.search.search import SearchConfig, search
-from graphiti_core.search.search_config import DEFAULT_SEARCH_LIMIT, SearchResults
-from graphiti_core.search.search_config_recipes import (
+from graphiti.graphiti_core.llm_client import LLMClient, OpenAIClient
+from graphiti.graphiti_core.nodes import CommunityNode, EntityNode, EpisodeType, EpisodicNode
+from graphiti.graphiti_core.search.search import SearchConfig, search
+from graphiti.graphiti_core.search.search_config import DEFAULT_SEARCH_LIMIT, SearchResults
+from graphiti.graphiti_core.search.search_config_recipes import (
     COMBINED_HYBRID_SEARCH_CROSS_ENCODER,
     EDGE_HYBRID_SEARCH_NODE_DISTANCE,
     EDGE_HYBRID_SEARCH_RRF,
 )
-from graphiti_core.search.search_filters import SearchFilters
-from graphiti_core.search.search_utils import (
+from graphiti.graphiti_core.search.search_filters import SearchFilters
+from graphiti.graphiti_core.search.search_utils import (
     RELEVANT_SCHEMA_LIMIT,
     get_edge_invalidation_candidates,
     get_mentioned_nodes,
     get_relevant_edges,
 )
-from graphiti_core.telemetry import capture_event
-from graphiti_core.utils.bulk_utils import (
+from graphiti.graphiti_core.telemetry import capture_event
+from graphiti.graphiti_core.utils.bulk_utils import (
     RawEpisode,
     add_nodes_and_edges_bulk,
     dedupe_edges_bulk,
@@ -61,30 +61,30 @@ from graphiti_core.utils.bulk_utils import (
     resolve_edge_pointers,
     retrieve_previous_episodes_bulk,
 )
-from graphiti_core.utils.datetime_utils import utc_now
-from graphiti_core.utils.maintenance.community_operations import (
+from graphiti.graphiti_core.utils.datetime_utils import utc_now
+from graphiti.graphiti_core.utils.maintenance.community_operations import (
     build_communities,
     remove_communities,
     update_community,
 )
-from graphiti_core.utils.maintenance.edge_operations import (
+from graphiti.graphiti_core.utils.maintenance.edge_operations import (
     build_duplicate_of_edges,
     build_episodic_edges,
     extract_edges,
     resolve_extracted_edge,
     resolve_extracted_edges,
 )
-from graphiti_core.utils.maintenance.graph_data_operations import (
+from graphiti.graphiti_core.utils.maintenance.graph_data_operations import (
     EPISODE_WINDOW_LEN,
     build_indices_and_constraints,
     retrieve_episodes,
 )
-from graphiti_core.utils.maintenance.node_operations import (
+from graphiti.graphiti_core.utils.maintenance.node_operations import (
     extract_attributes_from_nodes,
     extract_nodes,
     resolve_extracted_nodes,
 )
-from graphiti_core.utils.ontology_utils.entity_types_utils import validate_entity_types
+from graphiti.graphiti_core.utils.ontology_utils.entity_types_utils import validate_entity_types
 
 logger = logging.getLogger(__name__)
 

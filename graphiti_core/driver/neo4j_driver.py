@@ -21,7 +21,7 @@ from typing import Any
 from neo4j import AsyncGraphDatabase, EagerResult
 from typing_extensions import LiteralString
 
-from graphiti_core.driver.driver import GraphDriver, GraphDriverSession
+from graphiti.graphiti_core.driver.driver import GraphDriver, GraphDriverSession
 
 logger = logging.getLogger(__name__)
 

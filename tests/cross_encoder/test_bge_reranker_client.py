@@ -16,7 +16,7 @@ limitations under the License.
 
 import pytest
 
-from graphiti_core.cross_encoder.bge_reranker_client import BGERerankerClient
+from graphiti.graphiti_core.cross_encoder.bge_reranker_client import BGERerankerClient
 
 pytestmark = pytest.mark.integration
 

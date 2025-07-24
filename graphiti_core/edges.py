@@ -24,16 +24,16 @@ from uuid import uuid4
 from pydantic import BaseModel, Field
 from typing_extensions import LiteralString
 
-from graphiti_core.driver.driver import GraphDriver
-from graphiti_core.embedder import EmbedderClient
-from graphiti_core.errors import EdgeNotFoundError, GroupsEdgesNotFoundError
-from graphiti_core.helpers import parse_db_date
-from graphiti_core.models.edges.edge_db_queries import (
+from graphiti.graphiti_core.driver.driver import GraphDriver
+from graphiti.graphiti_core.embedder import EmbedderClient
+from graphiti.graphiti_core.errors import EdgeNotFoundError, GroupsEdgesNotFoundError
+from graphiti.graphiti_core.helpers import parse_db_date
+from graphiti.graphiti_core.models.edges.edge_db_queries import (
     COMMUNITY_EDGE_SAVE,
     ENTITY_EDGE_SAVE,
     EPISODIC_EDGE_SAVE,
 )
-from graphiti_core.nodes import Node
+from graphiti.graphiti_core.nodes import Node
 
 logger = logging.getLogger(__name__)
 

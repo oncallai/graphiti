@@ -19,13 +19,13 @@ from datetime import datetime, timezone
 
 import pandas as pd
 
-from graphiti_core import Graphiti
-from graphiti_core.graphiti import AddEpisodeResults
-from graphiti_core.helpers import semaphore_gather
-from graphiti_core.llm_client import LLMConfig, OpenAIClient
-from graphiti_core.nodes import EpisodeType
-from graphiti_core.prompts import prompt_library
-from graphiti_core.prompts.eval import EvalAddEpisodeResults
+from graphiti.graphiti_core import Graphiti
+from graphiti.graphiti_core.graphiti import AddEpisodeResults
+from graphiti.graphiti_core.helpers import semaphore_gather
+from graphiti.graphiti_core.llm_client import LLMConfig, OpenAIClient
+from graphiti.graphiti_core.nodes import EpisodeType
+from graphiti.graphiti_core.prompts import prompt_library
+from graphiti.graphiti_core.prompts.eval import EvalAddEpisodeResults
 from tests.test_graphiti_int import NEO4J_URI, NEO4j_PASSWORD, NEO4j_USER
 
 

@@ -107,9 +107,11 @@ class DynamicPromptTypeWrapper:
                     func = self.default_versions.get(version)
                     if func is None:
                         raise AttributeError(f"Version '{version}' not found")
-                    self.logger.info(f"Using default {self.prompt_type} prompt '{version}' for source_description: '{source_description}'")
+                    self.logger.info(f"🔍 [NODES] Using DEFAULT prompt '{version}' for source_description: '{source_description}' (no domain-specific prompt found)")
                 else:
-                    self.logger.info(f"Using dynamic {self.prompt_type} prompt '{version}' for source_description: '{source_description}'")
+                    # Get more detailed information about the prompt being used
+                    prompt_info = self._get_prompt_info(func, source_description)
+                    self.logger.info(f"🎯 [NODES] Using DOMAIN-SPECIFIC prompt '{version}' for '{source_description}' → {prompt_info}")
             # Dynamic selection for extract_edges
             elif self.prompt_type == 'extract_edges' and 'source_description' in context:
                 versions = get_extract_edge_prompts(context)
@@ -118,14 +120,16 @@ class DynamicPromptTypeWrapper:
                     func = self.default_versions.get(version)
                     if func is None:
                         raise AttributeError(f"Version '{version}' not found")
-                    self.logger.info(f"Using default {self.prompt_type} prompt '{version}' for source_description: '{source_description}'")
+                    self.logger.info(f"🔍 [EDGES] Using DEFAULT prompt '{version}' for source_description: '{source_description}' (no domain-specific prompt found)")
                 else:
-                    self.logger.info(f"Using dynamic {self.prompt_type} prompt '{version}' for source_description: '{source_description}'")
+                    # Get more detailed information about the prompt being used
+                    prompt_info = self._get_prompt_info(func, source_description)
+                    self.logger.info(f"🎯 [EDGES] Using DOMAIN-SPECIFIC prompt '{version}' for '{source_description}' → {prompt_info}")
             else:
                 func = self.default_versions.get(version)
                 if func is None:
                     raise AttributeError(f"Version '{version}' not found")
-                self.logger.info(f"Using default {self.prompt_type} prompt '{version}' (no source_description in context)")
+                self.logger.info(f"🔍 [{self.prompt_type.upper()}] Using DEFAULT prompt '{version}' (no source_description in context)")
             
             # Apply the same wrapper logic as before
             messages = func(context)
@@ -134,6 +138,56 @@ class DynamicPromptTypeWrapper:
             return messages
         
         return dynamic_wrapper
+    
+    def _get_prompt_info(self, func: PromptFunction, source_description: str) -> str:
+        """
+        Extract information about which prompt file is being used.
+        """
+        try:
+            # Get the function's module name to identify the prompt file
+            module_name = func.__module__
+            
+            # Map source descriptions to human-readable domain names
+            domain_mapping = {
+                'aws_resources': 'AWS Cloud',
+                'azure_resources': 'Azure Cloud', 
+                'gcp_resources': 'GCP Cloud',
+                'cloud_resources': 'Generic Cloud',
+                'github_repo': 'GitHub Repository',
+                'github_resources': 'GitHub Development',
+                'cicd_resources': 'CI/CD Pipeline',
+                'pipeline_resources': 'Deployment Pipeline',
+                'logs_resources': 'Observability Logs',
+                'metrics_resources': 'Observability Metrics',
+                'traces_resources': 'Observability Traces',
+                'observability_resources': 'General Observability',
+                'monitoring_resources': 'Monitoring Systems'
+            }
+            
+            domain_name = domain_mapping.get(source_description, source_description)
+            
+            # Extract the file path from module name
+            if 'cloud.aws' in module_name:
+                return f"cloud/aws/extract_{self.prompt_type}.py ({domain_name})"
+            elif 'cloud.azure' in module_name:
+                return f"cloud/azure/extract_{self.prompt_type}.py ({domain_name})"
+            elif 'cloud.gcp' in module_name:
+                return f"cloud/gcp/extract_{self.prompt_type}.py ({domain_name})"
+            elif 'github' in module_name:
+                return f"github/extract_{self.prompt_type}.py ({domain_name})"
+            elif 'cicd' in module_name:
+                return f"cicd/extract_{self.prompt_type}.py ({domain_name})"
+            elif 'observability.logs' in module_name:
+                return f"observability/logs/extract_{self.prompt_type}.py ({domain_name})"
+            elif 'observability.metrics' in module_name:
+                return f"observability/metrics/extract_{self.prompt_type}.py ({domain_name})"
+            elif 'observability.traces' in module_name:
+                return f"observability/traces/extract_{self.prompt_type}.py ({domain_name})"
+            else:
+                return f"{module_name} ({domain_name})"
+                
+        except Exception:
+            return f"unknown prompt file ({source_description})"
 
 
 class PromptLibraryWrapper:

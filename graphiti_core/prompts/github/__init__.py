@@ -1,0 +1,3 @@
+"""
+GitHub specific prompts package
+""" 

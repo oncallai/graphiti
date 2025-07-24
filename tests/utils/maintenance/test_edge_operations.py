@@ -3,8 +3,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from graphiti_core.edges import EntityEdge
-from graphiti_core.nodes import EpisodicNode
+from graphiti.graphiti_core.edges import EntityEdge
+from graphiti.graphiti_core.nodes import EpisodicNode
 
 
 @pytest.fixture

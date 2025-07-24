@@ -20,8 +20,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from graphiti_core.cross_encoder.gemini_reranker_client import GeminiRerankerClient
-from graphiti_core.llm_client import LLMConfig, RateLimitError
+from graphiti.graphiti_core.cross_encoder.gemini_reranker_client import GeminiRerankerClient
+from graphiti.graphiti_core.llm_client import LLMConfig, RateLimitError
 
 
 @pytest.fixture

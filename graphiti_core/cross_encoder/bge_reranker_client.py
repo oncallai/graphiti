@@ -28,7 +28,7 @@ else:
             'Install it with: pip install graphiti-core[sentence-transformers]'
         ) from None
 
-from graphiti_core.cross_encoder.client import CrossEncoderClient
+from graphiti.graphiti_core.cross_encoder.client import CrossEncoderClient
 
 
 class BGERerankerClient(CrossEncoderClient):

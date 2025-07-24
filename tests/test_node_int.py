@@ -21,7 +21,7 @@ from uuid import uuid4
 import pytest
 from neo4j import AsyncGraphDatabase
 
-from graphiti_core.nodes import (
+from graphiti.graphiti_core.nodes import (
     CommunityNode,
     EntityNode,
     EpisodeType,

@@ -19,10 +19,10 @@ from datetime import datetime, timezone
 
 from typing_extensions import LiteralString
 
-from graphiti_core.driver.driver import GraphDriver
-from graphiti_core.graph_queries import get_fulltext_indices, get_range_indices
-from graphiti_core.helpers import parse_db_date, semaphore_gather
-from graphiti_core.nodes import EpisodeType, EpisodicNode
+from graphiti.graphiti_core.driver.driver import GraphDriver
+from graphiti.graphiti_core.graph_queries import get_fulltext_indices, get_range_indices
+from graphiti.graphiti_core.helpers import parse_db_date, semaphore_gather
+from graphiti.graphiti_core.nodes import EpisodeType, EpisodicNode
 
 EPISODE_WINDOW_LEN = 3
 
