@@ -75,6 +75,10 @@ def extract_message(context: dict[str, Any]) -> list[Message]:
     Your primary task is to identify applications and their infrastructure components (databases, caches, message queues, etc.)."""
 
     user_prompt = f"""
+<ENTITY TYPES>
+{context['entity_types']}
+</ENTITY TYPES>
+
 <PREVIOUS MESSAGES>
 {json.dumps([ep for ep in context['previous_episodes']], indent=2)}
 </PREVIOUS MESSAGES>
@@ -82,10 +86,6 @@ def extract_message(context: dict[str, Any]) -> list[Message]:
 <CURRENT MESSAGE>
 {context['episode_content']}
 </CURRENT MESSAGE>
-
-<ENTITY TYPES>
-{context['entity_types']}
-</ENTITY TYPES>
 
 Instructions:
 
@@ -164,15 +164,16 @@ def extract_json(context: dict[str, Any]) -> list[Message]:
     Your primary task is to identify applications and their infrastructure components from JSON configuration files, package manifests, and metadata."""
 
     user_prompt = f"""
+<ENTITY TYPES>
+{context['entity_types']}
+</ENTITY TYPES>
+
 <SOURCE DESCRIPTION>:
 {context['source_description']}
 </SOURCE DESCRIPTION>
 <JSON>
 {context['episode_content']}
 </JSON>
-<ENTITY TYPES>
-{context['entity_types']}
-</ENTITY TYPES>
 
 Instructions:
 
@@ -253,95 +254,17 @@ def extract_text(context: dict[str, Any]) -> list[Message]:
     Your primary task is to identify applications and their infrastructure components from documentation, code comments, README files, and technical descriptions."""
 
     user_prompt = f"""
-<TEXT>
-{context['episode_content']}
-</TEXT>
 <ENTITY TYPES>
 {context['entity_types']}
 </ENTITY TYPES>
 
-Instructions:
+<TEXT>
+{context['episode_content']}
+</TEXT>
 
-You are analyzing text that may contain technical documentation, code comments, README files, or descriptions of software systems. Your task is to extract **ONLY** application entities and infrastructure dependency entities from the TEXT.
-
-## EXTRACTION FOCUS:
-
-### 1. **Application Entities** - Extract these types:
-   - Application names, service names, microservices
-   - Software projects, modules, or components
-   - System names or platform names
-   - API names or web service names
-   - Repository names (when they represent applications)
-
-### 2. **Infrastructure Dependencies** - Extract these types:
-   - **Databases**: PostgreSQL, MySQL, MongoDB, Redis, etc.
-   - **Caches**: Redis, Memcached, etc.
-   - **Message Queues**: RabbitMQ, Kafka, SQS, etc.
-   - **Storage Systems**: S3, MinIO, file systems, etc.
-   - **External Services**: Third-party APIs, cloud services
-   - **Infrastructure Components**: Load balancers, proxies, etc.
-
-## TEXT EXTRACTION RULES:
-
-### **DO EXTRACT**:
-- Specific application or service names mentioned in the text
-- Database names or database system references
-- Cache service names or caching system references
-- Message queue or event streaming system names
-- Storage service names or storage system references
-- External API names or third-party service references
-- Infrastructure component names from technical descriptions
-
-### **DO NOT EXTRACT**:
-- People, users, developers, or team names
-- Companies or organizations (unless they are infrastructure services)
-- Dates, times, versions, or temporal information
-- File names, directory paths, or code snippets
-- Programming languages or frameworks (unless they are the main application)
-- Generic terms like "API", "service", "database" without specific names
-- Configuration parameters, environment variables
-- Documentation sections, headers, or descriptive text
-
-## NAMING CONVENTIONS:
-
-### **Applications**:
-- **Custom Applications**: Use the complete, precise name as written in the text
-  - Example: "UserManagementService" → "UserManagementService"
-  - Example: "payment-processing-api" → "payment-processing-api"
-  - Example: "E-Commerce Platform" → "E-Commerce Platform"
-
-### **Infrastructure**:
-- **Third-Party Services**: Use canonical service names (lowercase, standardized)
-  - Example: "PostgreSQL Database" → "postgresql"
-  - Example: "Redis Cache" → "redis"
-  - Example: "AWS S3 Storage" → "s3"
-  - Example: "MongoDB Database" → "mongodb"
-  - Example: "RabbitMQ Message Broker" → "rabbitmq"
-  - Example: "Elasticsearch Service" → "elasticsearch"
-
-- **Cloud Services**: Use standard service identifiers
-  - Example: "AWS Lambda Function" → "lambda"
-  - Example: "Azure Blob Storage" → "blob-storage"
-  - Example: "Google Cloud Pub/Sub" → "pubsub"
-  - Example: "AWS EC2 Instance" → "ec2"
-
-- **Specific Instances**: Use instance names when available
-  - Example: "users_db database" → "users_db"
-  - Example: "session_cache Redis" → "session_cache"
-
-## ENTITY CLASSIFICATION:
-- Use the descriptions in ENTITY TYPES to classify each extracted entity
-- Assign the appropriate `entity_type_id` for each application or infrastructure component
-- Ensure infrastructure dependencies are properly classified by their type
-
-## QUALITY REQUIREMENTS:
-- Extract only entities that are **explicitly mentioned** in the TEXT
-- Use **exact names** from the text - do not modify or interpret unnecessarily
-- Focus on **concrete, identifiable** applications and infrastructure components
-- Avoid generic or placeholder names
-- Ensure entity names are **specific and meaningful**
-- Maintain consistency with established naming conventions
-- Verify that extracted names are complete and accurate
+Given the above text, extract entities from the TEXT that are explicitly or implicitly mentioned.
+For each entity extracted, also determine its entity type based on the provided ENTITY TYPES and their descriptions.
+Indicate the classified entity type by providing its entity_type_id.
 
 {context['custom_prompt']}
 """
