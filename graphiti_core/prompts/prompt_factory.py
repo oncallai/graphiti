@@ -30,10 +30,6 @@ from .observability.metrics.extract_edges import versions as metrics_edge_versio
 from .observability.traces.extract_nodes import versions as traces_node_versions
 from .observability.traces.extract_edges import versions as traces_edge_versions
 
-# Application-centric imports
-from .extract_nodes_application import versions as application_node_versions
-from .extract_edges_application import versions as application_edge_versions
-
 
 class PromptSelector:
     """
@@ -84,8 +80,6 @@ class PromptSelector:
             'observability_resources': metrics_node_versions,  # Default to metrics for generic observability
             'monitoring_resources': metrics_node_versions,  # Legacy support
             
-            # Application-centric
-            'application_resources': application_node_versions,
         }
         
         # Registry for edge extraction prompts
@@ -110,8 +104,6 @@ class PromptSelector:
             'observability_resources': metrics_edge_versions,  # Default to metrics for generic observability
             'monitoring_resources': metrics_edge_versions,  # Legacy support
             
-            # Application-centric
-            'application_resources': application_edge_versions,
         }
         
         # Default fallbacks

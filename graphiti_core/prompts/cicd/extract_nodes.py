@@ -164,8 +164,8 @@ You are analyzing CI/CD pipeline configurations and logs. Extract entities focus
 
 
 def extract_json(context: dict[str, Any]) -> list[Message]:
-    sys_prompt = """You are an AI assistant specialized in extracting CI/CD entities from JSON configurations.
-    Focus on pipeline configurations, build files, and CI/CD tool outputs."""
+    sys_prompt = """You are an AI assistant specialized in extracting CI/CD pipeline entities from JSON configurations.
+    Your primary focus is identifying CI/CD tools, build systems, and deployment resources from configuration files and logs."""
 
     user_prompt = f"""
 <SOURCE DESCRIPTION>:
@@ -178,50 +178,87 @@ def extract_json(context: dict[str, Any]) -> list[Message]:
 {context['entity_types']}
 </ENTITY TYPES>
 
-You are analyzing JSON from CI/CD systems. This could be:
-- Pipeline configuration files
-- Build tool outputs
-- CI/CD platform API responses
-- Deployment manifests
-- Configuration management files
-- Tool configuration files
+You are analyzing JSON from CI/CD systems. Extract entities focusing on:
 
-## EXTRACTION FOCUS FOR CI/CD JSON:
+## PRIMARY EXTRACTION TARGETS:
 
-1. **From Pipeline Configurations**:
-   - Pipeline names and job names
-   - Stage and step names
-   - Environment names and configurations
-   - Tool and service names
-   - Build and deployment targets
+1. **CI/CD Platforms & Tools**:
+   - Jenkins servers and jobs
+   - GitHub Actions workflows and runners
+   - GitLab CI/CD pipelines and runners
+   - Azure DevOps pipelines and agents
+   - CircleCI workflows and orbs
+   - Travis CI builds and stages
+   - TeamCity build configurations
+   - Bamboo build plans
 
-2. **From Build Tool Outputs**:
-   - Build tool names and versions
-   - Test framework names
-   - Artifact names and locations
-   - Dependency names and versions
-   - Build environment information
+2. **Build & Test Systems**:
+   - Build tools (Maven, Gradle, npm, yarn, pip, etc.)
+   - Testing frameworks (JUnit, Jest, pytest, etc.)
+   - Code quality tools (SonarQube, ESLint, etc.)
+   - Build servers and agents
+   - Build artifacts and packages
+   - Test environments and databases
 
-3. **From CI/CD Platform APIs**:
-   - Pipeline and job identifiers
-   - Runner and agent names
-   - Environment and deployment names
-   - Tool and service configurations
-   - Build and test results
+3. **Deployment & Infrastructure**:
+   - Deployment environments (production, staging, dev)
+   - Container orchestration (Kubernetes, Docker Swarm)
+   - Infrastructure as Code tools (Terraform, CloudFormation)
+   - Deployment targets (servers, clusters, cloud services)
+   - Blue-green deployment environments
+   - Canary deployment stages
 
-4. **From Deployment Manifests**:
-   - Deployment environment names
-   - Service and application names
-   - Infrastructure component names
-   - Configuration and secret names
-   - Monitoring and logging tools
+4. **Artifact & Package Management**:
+   - Artifact repositories (Nexus, Artifactory, GitHub Packages)
+   - Container registries (Docker Hub, ECR, ACR, GCR)
+   - Package managers (npm, Maven, NuGet, PyPI)
+   - Build artifacts and binaries
+   - Docker images and containers
+   - Helm charts and Kubernetes manifests
 
-## CI/CD JSON SPECIFIC RULES:
-- Extract pipeline and job names from appropriate fields
-- Include environment information when available
+5. **Monitoring & Observability**:
+   - Monitoring tools (Prometheus, Grafana, Datadog)
+   - Logging systems (ELK Stack, Splunk, CloudWatch)
+   - Alerting systems (PagerDuty, Slack, email)
+   - APM tools (New Relic, AppDynamics)
+   - Health check endpoints
+   - Performance monitoring dashboards
+
+6. **Security & Compliance**:
+   - Security scanning tools (SonarQube, Snyk, OWASP ZAP)
+   - Vulnerability scanners
+   - Compliance checking tools
+   - Secret management systems (Vault, AWS Secrets Manager)
+   - Code signing tools
+   - Security testing environments
+
+7. **Communication & Notifications**:
+   - Notification channels (Slack, Teams, email)
+   - Chat platforms and webhooks
+   - Status pages and dashboards
+   - Communication tools for deployments
+   - Release notes and changelogs
+
+## CI/CD-SPECIFIC RULES:
+- Extract pipeline names and job names
+- Include environment names (prod, staging, dev)
 - Capture tool and platform names
-- Focus on build and deployment targets
-- Skip generic configuration values
+- Extract from configuration files (YAML, JSON, XML)
+- Include version information when relevant
+- Capture build and deployment targets
+
+## CI/CD NAMING CONVENTIONS:
+- Pipelines: use descriptive names (e.g., "prod-deployment-pipeline", "test-automation")
+- Jobs: use specific job names (e.g., "build-and-test", "deploy-to-staging")
+- Environments: use environment names (e.g., "production", "staging", "development")
+- Tools: use tool names (e.g., "jenkins", "github-actions", "sonarqube")
+
+## DO NOT EXTRACT:
+- Generic configuration values or parameters
+- Temporary build artifacts or logs
+- Personal information or tokens
+- Generic tool names without specific instances
+- Build status or result information
 
 {context['custom_prompt']}
 """
@@ -232,8 +269,8 @@ You are analyzing JSON from CI/CD systems. This could be:
 
 
 def extract_text(context: dict[str, Any]) -> list[Message]:
-    sys_prompt = """You are an AI assistant specialized in extracting CI/CD entities from documentation and logs.
-    Focus on CI/CD documentation, deployment guides, and pipeline logs."""
+    sys_prompt = """You are an AI assistant specialized in extracting CI/CD pipeline entities from documentation and logs.
+    Your primary focus is identifying CI/CD tools, build systems, and deployment resources from configuration files and logs."""
 
     user_prompt = f"""
 <TEXT>
@@ -243,56 +280,87 @@ def extract_text(context: dict[str, Any]) -> list[Message]:
 {context['entity_types']}
 </ENTITY TYPES>
 
-You are analyzing text about CI/CD systems. This could be:
-- CI/CD documentation and guides
-- Deployment runbooks
-- Pipeline logs and outputs
-- Build and test reports
-- Release notes and changelogs
-- Infrastructure documentation
+You are analyzing text about CI/CD systems. Extract entities focusing on:
 
-## EXTRACTION FOCUS FOR CI/CD TEXT:
+## PRIMARY EXTRACTION TARGETS:
 
-1. **Pipeline Information**:
-   - Pipeline names and descriptions
-   - Job and stage names
-   - Environment names and configurations
-   - Tool and platform names
-   - Build and deployment targets
+1. **CI/CD Platforms & Tools**:
+   - Jenkins servers and jobs
+   - GitHub Actions workflows and runners
+   - GitLab CI/CD pipelines and runners
+   - Azure DevOps pipelines and agents
+   - CircleCI workflows and orbs
+   - Travis CI builds and stages
+   - TeamCity build configurations
+   - Bamboo build plans
 
-2. **Build and Test Components**:
-   - Build tool names and versions
-   - Test framework names
-   - Code quality tool names
-   - Artifact and package names
-   - Build environment information
+2. **Build & Test Systems**:
+   - Build tools (Maven, Gradle, npm, yarn, pip, etc.)
+   - Testing frameworks (JUnit, Jest, pytest, etc.)
+   - Code quality tools (SonarQube, ESLint, etc.)
+   - Build servers and agents
+   - Build artifacts and packages
+   - Test environments and databases
 
-3. **Deployment and Infrastructure**:
-   - Deployment environment names
-   - Infrastructure component names
-   - Service and application names
-   - Monitoring and logging tools
-   - Security and compliance tools
+3. **Deployment & Infrastructure**:
+   - Deployment environments (production, staging, dev)
+   - Container orchestration (Kubernetes, Docker Swarm)
+   - Infrastructure as Code tools (Terraform, CloudFormation)
+   - Deployment targets (servers, clusters, cloud services)
+   - Blue-green deployment environments
+   - Canary deployment stages
 
-4. **Tools and Platforms**:
-   - CI/CD platform names
-   - Build and test tool names
-   - Deployment tool names
-   - Monitoring and alerting tools
-   - Communication and notification tools
+4. **Artifact & Package Management**:
+   - Artifact repositories (Nexus, Artifactory, GitHub Packages)
+   - Container registries (Docker Hub, ECR, ACR, GCR)
+   - Package managers (npm, Maven, NuGet, PyPI)
+   - Build artifacts and binaries
+   - Docker images and containers
+   - Helm charts and Kubernetes manifests
 
-## CI/CD TEXT SPECIFIC RULES:
-- Extract specific pipeline and tool names
-- Include environment prefixes/suffixes (prod-, -staging)
-- Capture build and deployment target names
-- Focus on currently used tools and platforms
-- Extract from configuration examples and logs
+5. **Monitoring & Observability**:
+   - Monitoring tools (Prometheus, Grafana, Datadog)
+   - Logging systems (ELK Stack, Splunk, CloudWatch)
+   - Alerting systems (PagerDuty, Slack, email)
+   - APM tools (New Relic, AppDynamics)
+   - Health check endpoints
+   - Performance monitoring dashboards
 
-## CI/CD NAMING STANDARDS:
-- Use full pipeline names (e.g., "prod-deployment-pipeline")
-- Include environment context (e.g., "staging-test-automation")
-- Maintain original naming conventions
-- Use canonical names for well-known tools and platforms
+6. **Security & Compliance**:
+   - Security scanning tools (SonarQube, Snyk, OWASP ZAP)
+   - Vulnerability scanners
+   - Compliance checking tools
+   - Secret management systems (Vault, AWS Secrets Manager)
+   - Code signing tools
+   - Security testing environments
+
+7. **Communication & Notifications**:
+   - Notification channels (Slack, Teams, email)
+   - Chat platforms and webhooks
+   - Status pages and dashboards
+   - Communication tools for deployments
+   - Release notes and changelogs
+
+## CI/CD-SPECIFIC RULES:
+- Extract pipeline names and job names
+- Include environment names (prod, staging, dev)
+- Capture tool and platform names
+- Extract from configuration files (YAML, JSON, XML)
+- Include version information when relevant
+- Capture build and deployment targets
+
+## CI/CD NAMING CONVENTIONS:
+- Pipelines: use descriptive names (e.g., "prod-deployment-pipeline", "test-automation")
+- Jobs: use specific job names (e.g., "build-and-test", "deploy-to-staging")
+- Environments: use environment names (e.g., "production", "staging", "development")
+- Tools: use tool names (e.g., "jenkins", "github-actions", "sonarqube")
+
+## DO NOT EXTRACT:
+- Generic configuration values or parameters
+- Temporary build artifacts or logs
+- Personal information or tokens
+- Generic tool names without specific instances
+- Build status or result information
 
 {context['custom_prompt']}
 """

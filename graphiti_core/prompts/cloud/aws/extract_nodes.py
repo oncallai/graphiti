@@ -163,7 +163,7 @@ You are analyzing AWS infrastructure resources. Extract entities focusing on:
 
 def extract_json(context: dict[str, Any]) -> list[Message]:
     sys_prompt = """You are an AI assistant specialized in extracting AWS infrastructure entities from JSON configurations.
-    Focus on CloudFormation templates, Terraform state files, AWS CLI output, and AWS API responses."""
+    Your primary focus is identifying AWS resources, their configurations, and relationships from AWS configurations and IaC files."""
 
     user_prompt = f"""
 <SOURCE DESCRIPTION>:
@@ -176,47 +176,85 @@ def extract_json(context: dict[str, Any]) -> list[Message]:
 {context['entity_types']}
 </ENTITY TYPES>
 
-You are analyzing JSON from AWS infrastructure. This could be:
-- CloudFormation templates
-- Terraform state files (.tfstate)
-- AWS CLI output (aws ec2 describe-instances, etc.)
-- AWS API responses
-- CDK output
-- AWS Config snapshots
+You are analyzing JSON from AWS infrastructure. Extract entities focusing on:
 
-## EXTRACTION FOCUS FOR AWS JSON:
+## PRIMARY EXTRACTION TARGETS:
 
-1. **From CloudFormation Templates**:
-   - Logical resource names from "Resources" section
-   - Resource types (AWS::EC2::Instance, AWS::S3::Bucket, etc.)
-   - Stack names and nested stacks
-   - Output values representing important resources
+1. **EC2 & Compute Resources**:
+   - EC2 instances (with instance IDs like "i-1234567890abcdef0")
+   - Auto Scaling Groups (ASG names)
+   - ECS clusters and services
+   - EKS clusters and node groups
+   - Lambda functions
+   - Batch compute environments
 
-2. **From Terraform State**:
-   - Resource names from "resources" array
-   - Instance IDs from "instances" objects
-   - Resource types and their identifiers
-   - Module names representing infrastructure components
+2. **VPC & Networking Resources**:
+   - VPCs (with VPC IDs like "vpc-12345678")
+   - Subnets (with subnet IDs like "subnet-12345678")
+   - Security Groups (with SG IDs like "sg-12345678")
+   - Network ACLs
+   - Route Tables
+   - Internet Gateways and NAT Gateways
+   - VPC Endpoints
 
-3. **From AWS CLI Output**:
-   - Instance IDs from describe-instances
-   - VPC IDs from describe-vpcs
-   - Security Group IDs from describe-security-groups
-   - S3 bucket names from list-buckets
-   - RDS instance names from describe-db-instances
+3. **Load Balancing & Traffic Management**:
+   - Application Load Balancers (ALB)
+   - Network Load Balancers (NLB)
+   - Target Groups
+   - API Gateway APIs
+   - CloudFront distributions
 
-4. **From AWS API Responses**:
-   - Resource identifiers and names
-   - Service-specific resource types
-   - Tagged resources with meaningful names
+4. **Storage & Database Resources**:
+   - S3 buckets
+   - EBS volumes (with volume IDs like "vol-12345678")
+   - RDS instances and clusters
+   - DynamoDB tables
+   - ElastiCache clusters
+   - EFS file systems
+   - Glacier vaults
 
-## AWS JSON SPECIFIC RULES:
-- Extract resource names from appropriate fields (name, id, identifier, arn)
-- Include resource type in extraction when it helps identify the entity
-- For nested resources, maintain the hierarchy in naming
-- Skip parameter definitions and variable declarations
-- Focus on actual provisioned resources, not templates
-- Extract from both "Resources" and "Outputs" sections in CloudFormation
+5. **Security & Identity**:
+   - IAM roles and policies
+   - IAM users and groups
+   - KMS keys and aliases
+   - Cognito User Pools
+   - Secrets Manager secrets
+   - Certificate Manager certificates
+
+6. **Messaging & Integration**:
+   - SQS queues
+   - SNS topics and subscriptions
+   - EventBridge rules
+   - Step Functions state machines
+   - SQS dead letter queues
+
+7. **Monitoring & Logging**:
+   - CloudWatch log groups
+   - CloudWatch dashboards
+   - CloudWatch alarms
+   - X-Ray traces
+   - Config rules
+
+## AWS-SPECIFIC RULES:
+- Always include resource IDs when available (e.g., "i-1234567890abcdef0", "vpc-12345678")
+- Use resource names as primary identifiers when IDs aren't available
+- Include region information in entity names when relevant (e.g., "prod-web-alb-us-east-1")
+- Extract IAM roles and policies as entities
+- Capture resource tags that indicate ownership or purpose
+- Include environment prefixes (prod-, staging-, dev-)
+
+## AWS NAMING CONVENTIONS:
+- EC2 instances: use instance names or IDs (e.g., "prod-web-server", "i-0a1b2c3d")
+- VPC resources: use VPC names or IDs (e.g., "prod-vpc", "vpc-12345678")
+- S3 buckets: use bucket names (e.g., "my-app-storage", "prod-logs-bucket")
+- RDS instances: use instance names (e.g., "prod-database", "staging-postgres")
+
+## DO NOT EXTRACT:
+- IP addresses or CIDR blocks as separate entities
+- Generic AWS service names without specific instances
+- Configuration parameters or values
+- Temporary or ephemeral resource names
+- Personal information or sensitive data
 
 {context['custom_prompt']}
 """
@@ -228,7 +266,7 @@ You are analyzing JSON from AWS infrastructure. This could be:
 
 def extract_text(context: dict[str, Any]) -> list[Message]:
     sys_prompt = """You are an AI assistant specialized in extracting AWS infrastructure entities from documentation and configuration files.
-    Focus on AWS infrastructure documentation, runbooks, and deployment guides."""
+    Your primary focus is identifying AWS resources, their configurations, and relationships from AWS configurations and IaC files."""
 
     user_prompt = f"""
 <TEXT>
@@ -238,52 +276,85 @@ def extract_text(context: dict[str, Any]) -> list[Message]:
 {context['entity_types']}
 </ENTITY TYPES>
 
-You are analyzing text about AWS infrastructure. This could be:
-- AWS infrastructure documentation
-- Deployment guides and runbooks
-- Architecture diagrams descriptions
-- AWS Well-Architected reviews
-- Cloud migration plans
-- AWS service documentation
+You are analyzing text about AWS infrastructure. Extract entities focusing on:
 
-## EXTRACTION FOCUS FOR AWS TEXT:
+## PRIMARY EXTRACTION TARGETS:
 
-1. **Infrastructure Components**:
-   - VPC names and network segments
-   - EC2 instance groups or Auto Scaling Groups
-   - RDS cluster names and instances
-   - S3 bucket names
-   - Load balancer names (ALB, NLB)
+1. **EC2 & Compute Resources**:
+   - EC2 instances (with instance IDs like "i-1234567890abcdef0")
+   - Auto Scaling Groups (ASG names)
+   - ECS clusters and services
+   - EKS clusters and node groups
+   - Lambda functions
+   - Batch compute environments
 
-2. **AWS Managed Services**:
-   - EKS cluster names
-   - ECS cluster and service names
-   - Lambda function names
-   - API Gateway names
-   - CloudFront distribution names
-   - SQS queue names
+2. **VPC & Networking Resources**:
+   - VPCs (with VPC IDs like "vpc-12345678")
+   - Subnets (with subnet IDs like "subnet-12345678")
+   - Security Groups (with SG IDs like "sg-12345678")
+   - Network ACLs
+   - Route Tables
+   - Internet Gateways and NAT Gateways
+   - VPC Endpoints
 
-3. **Architecture Entities**:
-   - Environment names (prod, staging, dev)
-   - Application tier names (web, app, data)
-   - Availability zones or regions
-   - Disaster recovery sites
-   - AWS account names or IDs
+3. **Load Balancing & Traffic Management**:
+   - Application Load Balancers (ALB)
+   - Network Load Balancers (NLB)
+   - Target Groups
+   - API Gateway APIs
+   - CloudFront distributions
 
-## AWS TEXT SPECIFIC RULES:
-- Extract specific resource names, not generic descriptions
-- Include environment prefixes/suffixes (prod-, -staging)
-- Capture multi-region deployments as separate entities
-- Focus on currently deployed resources, not planned ones
-- Extract from architecture diagrams if textually described
-- Include AWS service names when they represent specific instances
+4. **Storage & Database Resources**:
+   - S3 buckets
+   - EBS volumes (with volume IDs like "vol-12345678")
+   - RDS instances and clusters
+   - DynamoDB tables
+   - ElastiCache clusters
+   - EFS file systems
+   - Glacier vaults
 
-## AWS NAMING STANDARDS:
-- Use full resource names including environment (e.g., "prod-web-asg")
-- Include region in name if multi-region (e.g., "cache-cluster-us-east-1")
-- Maintain AWS naming conventions (lowercase, hyphens)
-- Use canonical names for well-known AWS services
-- Include account context when relevant (e.g., "prod-account-vpc")
+5. **Security & Identity**:
+   - IAM roles and policies
+   - IAM users and groups
+   - KMS keys and aliases
+   - Cognito User Pools
+   - Secrets Manager secrets
+   - Certificate Manager certificates
+
+6. **Messaging & Integration**:
+   - SQS queues
+   - SNS topics and subscriptions
+   - EventBridge rules
+   - Step Functions state machines
+   - SQS dead letter queues
+
+7. **Monitoring & Logging**:
+   - CloudWatch log groups
+   - CloudWatch dashboards
+   - CloudWatch alarms
+   - X-Ray traces
+   - Config rules
+
+## AWS-SPECIFIC RULES:
+- Always include resource IDs when available (e.g., "i-1234567890abcdef0", "vpc-12345678")
+- Use resource names as primary identifiers when IDs aren't available
+- Include region information in entity names when relevant (e.g., "prod-web-alb-us-east-1")
+- Extract IAM roles and policies as entities
+- Capture resource tags that indicate ownership or purpose
+- Include environment prefixes (prod-, staging-, dev-)
+
+## AWS NAMING CONVENTIONS:
+- EC2 instances: use instance names or IDs (e.g., "prod-web-server", "i-0a1b2c3d")
+- VPC resources: use VPC names or IDs (e.g., "prod-vpc", "vpc-12345678")
+- S3 buckets: use bucket names (e.g., "my-app-storage", "prod-logs-bucket")
+- RDS instances: use instance names (e.g., "prod-database", "staging-postgres")
+
+## DO NOT EXTRACT:
+- IP addresses or CIDR blocks as separate entities
+- Generic AWS service names without specific instances
+- Configuration parameters or values
+- Temporary or ephemeral resource names
+- Personal information or sensitive data
 
 {context['custom_prompt']}
 """
